@@ -4,8 +4,8 @@
   "private": true,
   "scripts": {
     "dev": "next dev -p 3000",
-    "build": "next build",
-    "start": "next build && next start -p ${PORT:-3000}",
+    "build": "next build --webpack",
+    "start": "next build --webpack && next start -p ${PORT:-3000}",
     "lint": "eslint",
     "db:push": "prisma db push",
     "db:seed": "tsx prisma/seed.ts",
