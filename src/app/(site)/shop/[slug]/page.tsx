@@ -10,6 +10,7 @@ import {
 import { ProductGallery } from "@/components/product/ProductGallery";
 import { ProductCard } from "@/components/product/ProductCard";
 import { AddToCart } from "@/components/cart/AddToCart";
+import { StickyBuyBar } from "@/components/cart/StickyBuyBar";
 import { Reveal } from "@/components/motion/Reveal";
 import { formatPKR } from "@/lib/utils";
 import { isBeforeCutoff } from "@/lib/batch";
@@ -98,17 +99,14 @@ export default async function ProductPage({
         </nav>
       </div>
 
-      <article className="container-taazo grid gap-12 pb-24 pt-10 lg:grid-cols-2 lg:gap-20">
-        {/* Sticky image column — the photograph stays with you while you read. */}
-        <div className="lg:sticky lg:top-28 lg:self-start">
-          <ProductGallery
-            photos={product.photos}
-            name={product.name}
-            accent={product.accent}
-          />
-        </div>
-
-        <div>
+      {/*
+        Explicit placement rather than source order: on mobile the name and
+        price come before the image, so the first screen answers "what is this
+        and what does it cost" instead of showing only a photograph. Desktop is
+        unchanged — image left and sticky, everything else right.
+      */}
+      <article className="container-taazo grid gap-x-20 gap-y-8 pb-24 pt-10 lg:grid-cols-2">
+        <div className="lg:col-start-2 lg:row-start-1">
           <p className="text-2xs uppercase tracking-[0.2em] text-sand-500">
             {categoryName}
           </p>
@@ -117,18 +115,45 @@ export default async function ProductPage({
           </h1>
           <p className="mt-3 text-lg text-sand-700">{product.tagline}</p>
 
-          <div className="mt-7 flex items-baseline gap-3">
+          <div className="mt-7 flex flex-wrap items-baseline gap-x-3 gap-y-3">
             <span className="text-3xl tabular-nums text-charcoal">
               {formatPKR(product.price)}
             </span>
             <span className="text-sm text-sand-600">{product.size}</span>
-          </div>
 
-          <p className="mt-7 max-w-lg text-base leading-relaxed text-sand-800">
+            {/*
+              The strongest thing this page can say is that the bottle was
+              pressed hours ago, and it is the one claim a shelf-stable
+              competitor cannot make. It was previously the third bullet of a
+              grey box below the fold.
+            */}
+            {batch.isLive && (
+              <span className="inline-flex items-center gap-2 rounded-full bg-sand-200/80 px-3 py-1.5 text-sm text-charcoal">
+                <span
+                  aria-hidden
+                  className="h-1.5 w-1.5 rounded-full bg-terracotta"
+                />
+                pressed {batch.pressedAtLabel} today
+              </span>
+            )}
+          </div>
+        </div>
+
+        {/* Sticky image column — the photograph stays with you while you read. */}
+        <div className="lg:sticky lg:top-28 lg:col-start-1 lg:row-span-2 lg:row-start-1 lg:self-start">
+          <ProductGallery
+            photos={product.photos}
+            name={product.name}
+            accent={product.accent}
+          />
+        </div>
+
+        <div className="lg:col-start-2 lg:row-start-2">
+          <p className="max-w-lg text-base leading-relaxed text-sand-800">
             {product.description}
           </p>
 
-          <div className="mt-9">
+          <div className="mt-9" data-buybox>
             <AddToCart product={product} available={available} />
           </div>
 
@@ -146,7 +171,7 @@ export default async function ProductPage({
                       : "Ordering now for tomorrow morning."}
                   </span>{" "}
                   {batch.isLive
-                    ? `Batch ${batch.code}, pressed ${batch.pressedAtLabel}.`
+                    ? `Batch ${batch.code}.`
                     : "Tomorrow's batch is pressed at dawn."}
                 </span>
               </li>
@@ -221,6 +246,8 @@ export default async function ProductPage({
           </Reveal>
         </section>
       )}
+
+      <StickyBuyBar product={product} available={available} />
     </>
   );
 }

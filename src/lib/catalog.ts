@@ -105,8 +105,15 @@ export async function getProductBySlug(slug: string) {
   return toCatalog(product);
 }
 
+/**
+ * Siblings first, then anything else pressed today.
+ *
+ * Same-category alone leaves single-product categories with an empty rail —
+ * with one juice and one tea in the catalogue, those two pages cross-sold
+ * nothing at all and dead-ended into the footer.
+ */
 export async function getRelatedProducts(product: CatalogProduct, limit = 3) {
-  const related = await db.product.findMany({
+  const sameCategory = await db.product.findMany({
     where: {
       active: true,
       category: product.category,
@@ -115,7 +122,20 @@ export async function getRelatedProducts(product: CatalogProduct, limit = 3) {
     orderBy: { sortOrder: "asc" },
     take: limit,
   });
-  return related.map(toCatalog);
+
+  if (sameCategory.length >= limit) return sameCategory.map(toCatalog);
+
+  const fill = await db.product.findMany({
+    where: {
+      active: true,
+      category: { not: product.category },
+      slug: { not: product.slug },
+    },
+    orderBy: { sortOrder: "asc" },
+    take: limit - sameCategory.length,
+  });
+
+  return [...sameCategory, ...fill].map(toCatalog);
 }
 
 export async function getCategories() {
