@@ -1,0 +1,1007 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>taazo. — Fresh juice from Punjab's orchards</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,700;0,9..144,800;0,9..144,900&family=Nunito+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    /* ── Design Tokens ── */
+    :root {
+      --burnt-sienna: #B54A2B;
+      --deep-olive: #2F3A22;
+      --muted-gold: #D9A441;
+      --cream: #F6EFE3;
+      --warm-charcoal: #2B2117;
+      --sand: #8C7A5E;
+
+      --font-display: 'Fraunces', serif;
+      --font-body: 'Nunito Sans', sans-serif;
+
+      --space-xs: 0.5rem;
+      --space-sm: 1rem;
+      --space-md: 1.5rem;
+      --space-lg: 3rem;
+      --space-xl: 5rem;
+      --space-2xl: 8rem;
+
+      --max-width: 1200px;
+    }
+
+    /* ── Reset ── */
+    *, *::before, *::after {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      font-family: var(--font-body);
+      font-weight: 400;
+      color: var(--warm-charcoal);
+      background-color: var(--cream);
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    img {
+      max-width: 100%;
+      display: block;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    button {
+      font-family: inherit;
+      cursor: pointer;
+      border: none;
+      background: none;
+    }
+
+    /* ── Focus Styles ── */
+    :focus-visible {
+      outline: 2px solid var(--burnt-sienna);
+      outline-offset: 3px;
+    }
+
+    /* ── Utilities ── */
+    .wrap {
+      max-width: var(--max-width);
+      margin: 0 auto;
+      padding-left: 2rem;
+      padding-right: 2rem;
+    }
+
+    /* ── Navigation ── */
+    .site-nav {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: var(--cream);
+      border-bottom: 1px solid var(--sand);
+    }
+
+    .site-nav .wrap {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 56px;
+    }
+
+    .logo {
+      font-family: var(--font-display);
+      font-weight: 900;
+      font-size: 1.5rem;
+      color: var(--burnt-sienna);
+      letter-spacing: -0.02em;
+    }
+
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 2rem;
+      list-style: none;
+    }
+
+    .nav-links a {
+      font-size: 0.95rem;
+      font-weight: 500;
+      color: var(--warm-charcoal);
+      transition: color 0.2s ease;
+    }
+
+    .nav-links a:hover {
+      color: var(--burnt-sienna);
+    }
+
+    .cart-btn {
+      display: flex;
+      align-items: center;
+      gap: 0.35rem;
+      font-size: 0.95rem;
+      font-weight: 500;
+      color: var(--warm-charcoal);
+      transition: color 0.2s ease;
+    }
+
+    .cart-btn:hover {
+      color: var(--burnt-sienna);
+    }
+
+    .cart-icon {
+      width: 20px;
+      height: 20px;
+    }
+
+    .hamburger {
+      display: none;
+      flex-direction: column;
+      gap: 4px;
+      background: none;
+      border: none;
+      padding: 4px;
+    }
+
+    .hamburger span {
+      display: block;
+      width: 22px;
+      height: 2px;
+      background: var(--warm-charcoal);
+      border-radius: 1px;
+      transition: transform 0.2s ease, opacity 0.2s ease;
+    }
+
+    /* ── Hero ── */
+    .hero {
+      padding: var(--space-xl) 0 var(--space-2xl);
+      overflow: hidden;
+    }
+
+    .hero .wrap {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: var(--space-lg);
+      align-items: center;
+    }
+
+    .hero-text {
+      max-width: 520px;
+    }
+
+    .hero-headline {
+      font-family: var(--font-display);
+      font-weight: 900;
+      font-size: clamp(2.4rem, 5vw, 3.6rem);
+      line-height: 1.12;
+      color: var(--warm-charcoal);
+      margin-bottom: var(--space-md);
+      letter-spacing: -0.02em;
+    }
+
+    .hero-sub {
+      font-size: 1.1rem;
+      color: var(--sand);
+      font-weight: 400;
+      margin-bottom: var(--space-md);
+      max-width: 40ch;
+      line-height: 1.7;
+    }
+
+    .hero-batch {
+      font-size: 0.85rem;
+      color: var(--burnt-sienna);
+      font-weight: 600;
+      margin-bottom: var(--space-lg);
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .hero-batch::before {
+      content: '';
+      display: inline-block;
+      width: 8px;
+      height: 8px;
+      background: var(--muted-gold);
+      border-radius: 50%;
+    }
+
+    .btn-primary {
+      display: inline-block;
+      background: var(--burnt-sienna);
+      color: var(--cream);
+      font-family: var(--font-body);
+      font-weight: 600;
+      font-size: 1rem;
+      padding: 0.85rem 2rem;
+      border-radius: 4px;
+      transition: background 0.2s ease;
+    }
+
+    .btn-primary:hover {
+      background: #9a3e23;
+    }
+
+    .hero-image {
+      position: relative;
+      height: 440px;
+      border-radius: 8px 0 0 8px;
+      background: linear-gradient(135deg, #e8a96b 0%, #d4783a 40%, #c25c2e 70%, #a84526 100%);
+      margin-right: -2rem;
+      overflow: hidden;
+    }
+
+    .hero-image::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 20%;
+      width: 60%;
+      height: 70%;
+      background: linear-gradient(180deg, transparent 0%, rgba(246, 239, 227, 0.15) 100%);
+      border-radius: 50% 50% 0 0;
+    }
+
+    /* ── Product Crates ── */
+    .products {
+      padding: var(--space-xl) 0 var(--space-2xl);
+    }
+
+    .section-title {
+      font-family: var(--font-display);
+      font-weight: 800;
+      font-size: clamp(1.8rem, 3.5vw, 2.5rem);
+      color: var(--warm-charcoal);
+      margin-bottom: var(--space-lg);
+      letter-spacing: -0.01em;
+    }
+
+    .crate-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      grid-template-rows: auto auto auto;
+      gap: 1.25rem;
+    }
+
+    .crate {
+      border: 1px solid var(--sand);
+      border-radius: 6px;
+      overflow: hidden;
+      background: var(--cream);
+      display: flex;
+      flex-direction: column;
+    }
+
+    .crate-img {
+      width: 100%;
+      aspect-ratio: 1 / 1;
+      display: flex;
+      align-items: flex-end;
+      justify-content: flex-start;
+      padding: 1rem;
+    }
+
+    .crate-body {
+      padding: 1rem 1.1rem 1.2rem;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .crate-name {
+      font-family: var(--font-display);
+      font-weight: 700;
+      font-size: 1.15rem;
+      margin-bottom: 0.25rem;
+      color: var(--warm-charcoal);
+    }
+
+    .crate-desc {
+      font-size: 0.88rem;
+      color: var(--sand);
+      margin-bottom: 0.75rem;
+      line-height: 1.55;
+      flex: 1;
+    }
+
+    .crate-price {
+      font-weight: 600;
+      font-size: 1rem;
+      color: var(--warm-charcoal);
+    }
+
+    /* Individual crate placement */
+    .crate--kinnow {
+      grid-column: 1 / 2;
+      grid-row: 1 / 3;
+    }
+    .crate--kinnow .crate-img {
+      aspect-ratio: auto;
+      flex: 1;
+      min-height: 200px;
+      background: linear-gradient(160deg, #e8a050 0%, #d4783a 60%, #c96830 100%);
+    }
+
+    .crate--sugarcane {
+      grid-column: 2 / 3;
+      grid-row: 1 / 2;
+    }
+    .crate--sugarcane .crate-img {
+      aspect-ratio: 4 / 3;
+      background: linear-gradient(145deg, #a8b06a 0%, #8a9a50 50%, #6e7f3c 100%);
+    }
+
+    .crate--falsa {
+      grid-column: 3 / 4;
+      grid-row: 1 / 2;
+    }
+    .crate--falsa .crate-img {
+      aspect-ratio: 1 / 1;
+      background: linear-gradient(150deg, #8e4060 0%, #6e2a48 60%, #5a2040 100%);
+    }
+
+    .crate--ambi {
+      grid-column: 2 / 4;
+      grid-row: 2 / 3;
+    }
+    .crate--ambi .crate-img {
+      aspect-ratio: 16 / 7;
+      background: linear-gradient(135deg, #d4b050 0%, #c8a040 40%, #b89030 100%);
+    }
+
+    .crate--orchard {
+      grid-column: 4 / 5;
+      grid-row: 1 / 3;
+    }
+    .crate--orchard .crate-img {
+      aspect-ratio: auto;
+      flex: 1;
+      min-height: 180px;
+      background: linear-gradient(155deg, #cc6040 0%, #b85030 30%, #a84828 60%, #d4783a 100%);
+    }
+
+    /* ── Gifting ── */
+    .gifting {
+      background: var(--deep-olive);
+      color: var(--cream);
+      padding: var(--space-2xl) 0;
+      overflow: hidden;
+    }
+
+    .gifting .section-title {
+      color: var(--cream);
+    }
+
+    .gifting-sub {
+      font-size: 1.05rem;
+      color: rgba(246, 239, 227, 0.7);
+      margin-bottom: var(--space-lg);
+      max-width: 36ch;
+    }
+
+    .gifting-grid {
+      display: grid;
+      grid-template-columns: 1.15fr 0.85fr;
+      gap: 1.5rem;
+    }
+
+    .gift-box {
+      border-radius: 6px;
+      overflow: hidden;
+      height: 320px;
+    }
+
+    .gift-box--a {
+      background: linear-gradient(140deg, #c87a4a 0%, #a85a30 40%, #8a4520 80%);
+    }
+
+    .gift-box--b {
+      background: linear-gradient(140deg, #d4a050 0%, #c08a38 50%, #a87830 100%);
+    }
+
+    /* Gifting animation states */
+    .gifting-content {
+      opacity: 1;
+      transform: none;
+      transition: none;
+    }
+
+    .gifting-content.anim-ready {
+      opacity: 0;
+      transform: translateY(24px) scale(0.95);
+      transition: opacity 0.7s cubic-bezier(0.22, 1, 0.36, 1),
+                  transform 0.7s cubic-bezier(0.22, 1, 0.36, 1);
+    }
+
+    .gifting-content.anim-visible {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .gifting-content.anim-ready {
+        opacity: 1;
+        transform: none;
+        transition: none;
+      }
+    }
+
+    /* ── Process ── */
+    .process {
+      padding: var(--space-2xl) 0;
+    }
+
+    .process-flow {
+      display: flex;
+      align-items: center;
+      gap: 0;
+      margin-top: var(--space-lg);
+      flex-wrap: wrap;
+    }
+
+    .process-step {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+
+    .process-step-icon {
+      width: 48px;
+      height: 48px;
+      margin-bottom: 0.25rem;
+    }
+
+    .process-step-label {
+      font-family: var(--font-display);
+      font-weight: 700;
+      font-size: 1.2rem;
+      color: var(--warm-charcoal);
+    }
+
+    .process-step-desc {
+      font-size: 0.88rem;
+      color: var(--sand);
+      max-width: 18ch;
+      line-height: 1.5;
+    }
+
+    .process-line {
+      width: 80px;
+      height: 1px;
+      background: var(--sand);
+      margin: 0 1.5rem;
+      margin-bottom: 2.5rem;
+    }
+
+    /* ── Social Proof ── */
+    .social-proof {
+      padding: var(--space-xl) 0 var(--space-2xl);
+    }
+
+    .proof-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1.5rem;
+      margin-top: var(--space-lg);
+    }
+
+    .proof-item {
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+    }
+
+    .proof-photo {
+      width: 100%;
+      aspect-ratio: 4 / 3;
+      border-radius: 6px;
+      overflow: hidden;
+    }
+
+    .proof-photo--a {
+      background: linear-gradient(135deg, #d4a878 0%, #c09060 50%, #a87848 100%);
+    }
+    .proof-photo--b {
+      background: linear-gradient(135deg, #c8956a 0%, #b8804a 50%, #a87040 100%);
+    }
+    .proof-photo--c {
+      background: linear-gradient(135deg, #d4b088 0%, #c49a68 50%, #b08850 100%);
+    }
+
+    .proof-caption {
+      font-size: 0.9rem;
+      color: var(--sand);
+      line-height: 1.5;
+    }
+
+    .proof-name {
+      font-weight: 600;
+      color: var(--warm-charcoal);
+      font-size: 0.88rem;
+    }
+
+    /* ── Footer ── */
+    .site-footer {
+      background: var(--warm-charcoal);
+      color: var(--cream);
+      padding: var(--space-xl) 0 var(--space-lg);
+    }
+
+    .footer-inner {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      flex-wrap: wrap;
+      gap: var(--space-lg);
+    }
+
+    .footer-brand .logo {
+      color: var(--cream);
+      margin-bottom: 0.75rem;
+    }
+
+    .footer-tagline {
+      font-size: 0.88rem;
+      color: rgba(246, 239, 227, 0.5);
+    }
+
+    .footer-links {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+
+    .footer-links a {
+      font-size: 0.92rem;
+      color: rgba(246, 239, 227, 0.7);
+      transition: color 0.2s ease;
+    }
+
+    .footer-links a:hover {
+      color: var(--cream);
+    }
+
+    .footer-social {
+      list-style: none;
+      display: flex;
+      gap: 1.5rem;
+    }
+
+    .footer-social a {
+      font-size: 0.92rem;
+      color: rgba(246, 239, 227, 0.7);
+      transition: color 0.2s ease;
+    }
+
+    .footer-social a:hover {
+      color: var(--cream);
+    }
+
+    .footer-bottom {
+      margin-top: var(--space-lg);
+      padding-top: var(--space-sm);
+      border-top: 1px solid rgba(246, 239, 227, 0.1);
+      font-size: 0.82rem;
+      color: rgba(246, 239, 227, 0.4);
+    }
+
+    /* ── Mobile ── */
+    @media (max-width: 768px) {
+      .hamburger {
+        display: flex;
+      }
+
+      .nav-menu {
+        display: none;
+        position: absolute;
+        top: 56px;
+        left: 0;
+        right: 0;
+        background: var(--cream);
+        border-bottom: 1px solid var(--sand);
+        padding: 1.5rem 2rem;
+        flex-direction: column;
+        gap: 1rem;
+      }
+
+      .nav-menu.open {
+        display: flex;
+      }
+
+      .nav-links {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 1rem;
+      }
+
+      .site-nav .wrap {
+        position: relative;
+      }
+
+      /* Hero */
+      .hero .wrap {
+        grid-template-columns: 1fr;
+        gap: var(--space-md);
+      }
+
+      .hero-image {
+        margin-right: -2rem;
+        margin-left: -2rem;
+        border-radius: 0;
+        height: 280px;
+        order: -1;
+      }
+
+      .hero-headline {
+        font-size: 2rem;
+      }
+
+      /* Crate grid */
+      .crate-grid {
+        grid-template-columns: 1fr;
+        grid-template-rows: auto;
+      }
+
+      .crate--kinnow,
+      .crate--sugarcane,
+      .crate--falsa,
+      .crate--ambi,
+      .crate--orchard {
+        grid-column: auto;
+        grid-row: auto;
+      }
+
+      .crate--kinnow .crate-img,
+      .crate--orchard .crate-img {
+        min-height: 160px;
+      }
+
+      .crate--ambi .crate-img {
+        aspect-ratio: 16 / 9;
+      }
+
+      /* Gifting */
+      .gifting-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .gift-box {
+        height: 220px;
+      }
+
+      /* Process */
+      .process-flow {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0;
+      }
+
+      .process-line {
+        width: 1px;
+        height: 40px;
+        margin: 0.75rem 0 0.75rem 24px;
+      }
+
+      /* Proof */
+      .proof-grid {
+        grid-template-columns: 1fr;
+      }
+
+      /* Footer */
+      .footer-inner {
+        flex-direction: column;
+        gap: var(--space-md);
+      }
+    }
+
+    @media (min-width: 769px) and (max-width: 1024px) {
+      .crate-grid {
+        grid-template-columns: repeat(2, 1fr);
+        grid-template-rows: auto;
+      }
+
+      .crate--kinnow {
+        grid-column: 1 / 2;
+        grid-row: 1 / 3;
+      }
+      .crate--sugarcane {
+        grid-column: 2 / 3;
+        grid-row: 1 / 2;
+      }
+      .crate--falsa {
+        grid-column: 2 / 3;
+        grid-row: 2 / 3;
+      }
+      .crate--ambi {
+        grid-column: 1 / 3;
+        grid-row: 3 / 4;
+      }
+      .crate--orchard {
+        grid-column: 1 / 3;
+        grid-row: 4 / 5;
+      }
+      .crate--orchard .crate-img {
+        aspect-ratio: 16 / 7;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ── Navigation ── -->
+  <header class="site-nav">
+    <div class="wrap">
+      <a href="/" class="logo" aria-label="taazo home">taazo.</a>
+      <button class="hamburger" id="hamburger" aria-label="Open menu" aria-expanded="false" aria-controls="nav-menu">
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+      <nav class="nav-menu" id="nav-menu">
+        <ul class="nav-links">
+          <li><a href="#products">shop</a></li>
+          <li><a href="#gifting">gifting</a></li>
+          <li><a href="#about">about</a></li>
+        </ul>
+        <button class="cart-btn" aria-label="Cart">
+          <svg class="cart-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/>
+            <line x1="3" y1="6" x2="21" y2="6"/>
+            <path d="M16 10a4 4 0 01-8 0"/>
+          </svg>
+          cart
+        </button>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+
+    <!-- ── Hero ── -->
+    <section class="hero">
+      <div class="wrap">
+        <div class="hero-text">
+          <h1 class="hero-headline">Pressed this morning.<br>Bottled by noon.</h1>
+          <p class="hero-sub">Fresh juice from Punjab's orchards, delivered across Pakistan.</p>
+          <p class="hero-batch" id="hero-batch"></p>
+          <a href="#products" class="btn-primary">shop the batch</a>
+        </div>
+        <div class="hero-image" role="img" aria-label="Fresh juice bottles in warm sunlight"></div>
+      </div>
+    </section>
+
+    <!-- ── Product Crates ── -->
+    <section class="products" id="products">
+      <div class="wrap">
+        <h2 class="section-title">What's fresh</h2>
+        <div class="crate-grid">
+
+          <article class="crate crate--kinnow">
+            <div class="crate-img" role="img" aria-label="Punjab Kinnow juice"></div>
+            <div class="crate-body">
+              <h3 class="crate-name">Punjab Kinnow</h3>
+              <p class="crate-desc">Pure citrus from Sargodha orchards, no water added</p>
+              <p class="crate-price">Rs 450</p>
+            </div>
+          </article>
+
+          <article class="crate crate--sugarcane">
+            <div class="crate-img" role="img" aria-label="Sugarcane Press juice"></div>
+            <div class="crate-body">
+              <h3 class="crate-name">Sugarcane Press</h3>
+              <p class="crate-desc">Cold-pressed ganne ka ras with a twist of lemon</p>
+              <p class="crate-price">Rs 350</p>
+            </div>
+          </article>
+
+          <article class="crate crate--falsa">
+            <div class="crate-img" role="img" aria-label="Falsa Berry juice"></div>
+            <div class="crate-body">
+              <h3 class="crate-name">Falsa Berry</h3>
+              <p class="crate-desc">Tart summer berry, lightly sweetened</p>
+              <p class="crate-price">Rs 400</p>
+            </div>
+          </article>
+
+          <article class="crate crate--ambi">
+            <div class="crate-img" role="img" aria-label="Ambi Panna drink"></div>
+            <div class="crate-body">
+              <h3 class="crate-name">Ambi Panna</h3>
+              <p class="crate-desc">Raw mango with roasted cumin and mint, the classic summer cooler</p>
+              <p class="crate-price">Rs 380</p>
+            </div>
+          </article>
+
+          <article class="crate crate--orchard">
+            <div class="crate-img" role="img" aria-label="Mixed Orchard juice"></div>
+            <div class="crate-body">
+              <h3 class="crate-name">Mixed Orchard</h3>
+              <p class="crate-desc">Seasonal fruit blend, changes with the harvest</p>
+              <p class="crate-price">Rs 480</p>
+            </div>
+          </article>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- ── Gifting ── -->
+    <section class="gifting" id="gifting">
+      <div class="wrap">
+        <div class="gifting-content" id="gifting-content">
+          <h2 class="section-title">Gifting boxes</h2>
+          <p class="gifting-sub">for Eid, weddings, the office</p>
+          <div class="gifting-grid">
+            <div class="gift-box gift-box--a" role="img" aria-label="Gift box with assorted juices"></div>
+            <div class="gift-box gift-box--b" role="img" aria-label="Premium gift box"></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── Process ── -->
+    <section class="process" id="about">
+      <div class="wrap">
+        <h2 class="section-title">From the orchard to your door</h2>
+        <div class="process-flow">
+
+          <div class="process-step">
+            <svg class="process-step-icon" viewBox="0 0 48 48" fill="none" stroke="var(--warm-charcoal)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M24 6c-6 0-12 4-12 12 0 6 4 10 8 13"/>
+              <path d="M24 6c6 0 12 4 12 12 0 6-4 10-8 13"/>
+              <circle cx="24" cy="36" r="3"/>
+              <path d="M20 42h8"/>
+              <path d="M18 14c2-2 4-3 6-3s4 1 6 3"/>
+            </svg>
+            <span class="process-step-label">Sourcing</span>
+            <span class="process-step-desc">Picked from orchards across Punjab</span>
+          </div>
+
+          <div class="process-line" aria-hidden="true"></div>
+
+          <div class="process-step">
+            <svg class="process-step-icon" viewBox="0 0 48 48" fill="none" stroke="var(--warm-charcoal)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="14" y="10" width="20" height="28" rx="3"/>
+              <path d="M18 18h12"/>
+              <path d="M18 24h12"/>
+              <path d="M18 30h8"/>
+              <path d="M24 6v4"/>
+              <path d="M20 6h8"/>
+            </svg>
+            <span class="process-step-label">Pressing</span>
+            <span class="process-step-desc">Cold-pressed the same morning</span>
+          </div>
+
+          <div class="process-line" aria-hidden="true"></div>
+
+          <div class="process-step">
+            <svg class="process-step-icon" viewBox="0 0 48 48" fill="none" stroke="var(--warm-charcoal)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M16 12h16v24a4 4 0 01-4 4h-8a4 4 0 01-4-4V12z"/>
+              <path d="M14 12h20"/>
+              <path d="M20 6v6"/>
+              <path d="M28 6v6"/>
+              <path d="M16 22c4 2 8 2 16 0"/>
+            </svg>
+            <span class="process-step-label">Bottling</span>
+            <span class="process-step-desc">Sealed and delivered by afternoon</span>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- ── Social Proof ── -->
+    <section class="social-proof">
+      <div class="wrap">
+        <h2 class="section-title">Real customers, real orders</h2>
+        <div class="proof-grid">
+
+          <div class="proof-item">
+            <div class="proof-photo proof-photo--a" role="img" aria-label="Order being packed"></div>
+            <p class="proof-caption">Ordered the Kinnow crate for the whole family, gone in two days</p>
+            <p class="proof-name">Ayesha R., Lahore</p>
+          </div>
+
+          <div class="proof-item">
+            <div class="proof-photo proof-photo--b" role="img" aria-label="Delivery photo"></div>
+            <p class="proof-caption">Sent a gifting box to my in-laws in Islamabad, they loved it</p>
+            <p class="proof-name">Hamza K., Karachi</p>
+          </div>
+
+          <div class="proof-item">
+            <div class="proof-photo proof-photo--c" role="img" aria-label="Fresh juice bottles"></div>
+            <p class="proof-caption">We keep a weekly order for our office pantry now</p>
+            <p class="proof-name">Sara M., Faisalabad</p>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ── Footer ── -->
+  <footer class="site-footer">
+    <div class="wrap">
+      <div class="footer-inner">
+        <div class="footer-brand">
+          <div class="logo">taazo.</div>
+          <p class="footer-tagline">Made fresh in Lahore.</p>
+        </div>
+        <ul class="footer-links">
+          <li><a href="#products">shop</a></li>
+          <li><a href="#about">about</a></li>
+          <li><a href="mailto:hello@taazo.pk">contact</a></li>
+        </ul>
+        <ul class="footer-social">
+          <li><a href="#">instagram</a></li>
+          <li><a href="#">whatsapp</a></li>
+          <li><a href="#">facebook</a></li>
+        </ul>
+      </div>
+      <p class="footer-bottom">&copy; 2026 taazo. All rights reserved.</p>
+    </div>
+  </footer>
+
+  <script>
+    // ── Day of week for hero batch line ──
+    (function () {
+      var days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+      var today = days[new Date().getDay()];
+      var el = document.getElementById('hero-batch');
+      if (el) {
+        el.textContent = today + '\u2019s batch \u2014 freshly pressed';
+      }
+    })();
+
+    // ── Mobile nav toggle ──
+    (function () {
+      var btn = document.getElementById('hamburger');
+      var menu = document.getElementById('nav-menu');
+      if (!btn || !menu) return;
+
+      btn.addEventListener('click', function () {
+        var open = menu.classList.toggle('open');
+        btn.setAttribute('aria-expanded', String(open));
+      });
+    })();
+
+    // ── Gifting section IntersectionObserver ──
+    (function () {
+      var content = document.getElementById('gifting-content');
+      if (!content) return;
+
+      // Respect reduced motion
+      var prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      if (prefersReduced) return;
+
+      // Set initial hidden state via class
+      content.classList.add('anim-ready');
+
+      var observer = new IntersectionObserver(function (entries) {
+        entries.forEach(function (entry) {
+          if (entry.isIntersecting) {
+            content.classList.add('anim-visible');
+            observer.unobserve(entry.target);
+          }
+        });
+      }, {
+        threshold: 0.2
+      });
+
+      observer.observe(content);
+    })();
+  </script>
+
+</body>
+</html>

@@ -1,0 +1,313 @@
+@import "tailwindcss";
+
+/* ==========================================================================
+   taazo. design tokens
+   Single source of truth. Never hardcode a colour, radius or duration
+   anywhere else in the codebase — add it here first.
+   ========================================================================== */
+
+@theme {
+  /* ---- Core brand palette ---- */
+  --color-terracotta: #c4602f;
+  --color-terracotta-deep: #a44d22;
+  --color-terracotta-soft: #e08b5c;
+  --color-olive: #2f3a22;
+  --color-olive-light: #465433;
+  --color-gold: #d9a441;
+  --color-gold-soft: #e8c584;
+  --color-cream: #f6efe3;
+  --color-cream-deep: #ece2d1;
+  --color-charcoal: #2b2117;
+
+  /* ---- Warm neutral ramp, derived from cream → charcoal ---- */
+  --color-sand-50: #fbf7f0;
+  --color-sand-100: #f6efe3;
+  --color-sand-200: #ece2d1;
+  --color-sand-300: #dcceb8;
+  --color-sand-400: #bda98d;
+  --color-sand-500: #9c8467;
+  --color-sand-600: #7a6449;
+  --color-sand-700: #574733;
+  --color-sand-800: #3d3123;
+  --color-sand-900: #2b2117;
+
+  /* ---- Product accents, sampled from the photography ---- */
+  --color-fruit-dragon: #d94a72;
+  --color-fruit-mango: #efa722;
+  --color-fruit-kiwi: #8aa63c;
+  --color-fruit-melon: #e35b52;
+  --color-fruit-carrot: #e5701c;
+  --color-fruit-peach: #e0a06a;
+
+  /* ---- Typography ---- */
+  --font-sans: var(--font-outfit), ui-sans-serif, system-ui, sans-serif;
+
+  --text-2xs: 0.6875rem;
+  --text-2xs--line-height: 1.4;
+  --text-xs: 0.78125rem;
+  --text-xs--line-height: 1.5;
+  --text-sm: 0.875rem;
+  --text-sm--line-height: 1.6;
+  --text-base: 1rem;
+  --text-base--line-height: 1.65;
+  --text-lg: 1.1875rem;
+  --text-lg--line-height: 1.6;
+  --text-xl: 1.4375rem;
+  --text-xl--line-height: 1.45;
+  --text-2xl: 1.75rem;
+  --text-2xl--line-height: 1.3;
+  --text-3xl: 2.25rem;
+  --text-3xl--line-height: 1.2;
+  --text-4xl: 3rem;
+  --text-4xl--line-height: 1.08;
+  --text-5xl: 4rem;
+  --text-5xl--line-height: 1.02;
+  --text-6xl: 5.5rem;
+  --text-6xl--line-height: 0.98;
+  --text-7xl: 7.5rem;
+  --text-7xl--line-height: 0.94;
+
+  /* ---- Radii ---- */
+  --radius-xs: 0.25rem;
+  --radius-sm: 0.5rem;
+  --radius-md: 0.875rem;
+  --radius-lg: 1.25rem;
+  --radius-xl: 1.75rem;
+  --radius-2xl: 2.5rem;
+
+  /* ---- Elevation. Warm-tinted, never neutral grey ---- */
+  --shadow-xs: 0 1px 2px rgba(43, 33, 23, 0.06);
+  --shadow-sm: 0 2px 8px rgba(43, 33, 23, 0.07);
+  --shadow-md: 0 8px 24px rgba(43, 33, 23, 0.09);
+  --shadow-lg: 0 18px 48px rgba(43, 33, 23, 0.12);
+  --shadow-xl: 0 32px 80px rgba(43, 33, 23, 0.16);
+
+  /* ---- Motion. Durations in ms via custom props below ---- */
+  --ease-out-soft: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-in-out-soft: cubic-bezier(0.65, 0, 0.35, 1);
+  --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+/* Motion scale, consumed by both CSS and GSAP (see lib/motion.ts) */
+:root {
+  --dur-instant: 120ms;
+  --dur-fast: 220ms;
+  --dur-base: 380ms;
+  --dur-slow: 640ms;
+  --dur-reveal: 900ms;
+
+  --header-h: 4.5rem;
+  --gutter: 1.25rem;
+}
+
+@media (min-width: 768px) {
+  :root {
+    --header-h: 5.5rem;
+    --gutter: 2rem;
+  }
+}
+
+/* ==========================================================================
+   Base
+   ========================================================================== */
+
+@layer base {
+  html {
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  /* Lenis drives scrolling; native smooth-scroll would fight it. */
+  html.lenis,
+  html.lenis body {
+    height: auto;
+  }
+  .lenis.lenis-smooth {
+    scroll-behavior: auto !important;
+  }
+  .lenis.lenis-stopped {
+    overflow: hidden;
+  }
+
+  body {
+    background-color: var(--color-cream);
+    color: var(--color-charcoal);
+    font-family: var(--font-sans);
+    font-size: var(--text-base);
+    line-height: var(--text-base--line-height);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+
+    /*
+     * `text-rendering: optimizeLegibility` is a blunt instrument — it silently
+     * enables whatever the font offers and has a real cost on long pages. These
+     * three do the same job explicitly:
+     *   kerning        — correct letter pairs, which large display type needs
+     *   optical-sizing — lets the variable font adjust its own contrast by size
+     *   synthesis:none — never fake a bold or an italic; if the weight does not
+     *                    exist, fall back honestly rather than smearing it
+     */
+    font-kerning: normal;
+    font-optical-sizing: auto;
+    font-synthesis: none;
+    font-variant-ligatures: common-ligatures contextual;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4 {
+    font-weight: 500;
+    letter-spacing: -0.025em;
+    text-wrap: balance;
+  }
+
+  p {
+    text-wrap: pretty;
+  }
+
+  /*
+   * Prices, quantities and batch codes are read as data, so they get tabular
+   * figures and slashed zeros wherever `tabular-nums` is used.
+   */
+  .tabular-nums {
+    font-variant-numeric: tabular-nums;
+    font-feature-settings: "tnum" 1, "zero" 1;
+  }
+
+  /* Accessibility is a brand value. Focus is always visible and on-brand. */
+  :focus-visible {
+    outline: 2px solid var(--color-terracotta);
+    outline-offset: 3px;
+    border-radius: var(--radius-xs);
+  }
+
+  ::selection {
+    background-color: var(--color-terracotta);
+    color: var(--color-cream);
+  }
+
+  img,
+  video {
+    max-width: 100%;
+    height: auto;
+  }
+}
+
+/* ==========================================================================
+   Utilities
+   ========================================================================== */
+
+@utility container-taazo {
+  width: 100%;
+  max-width: 82rem;
+  margin-inline: auto;
+  padding-inline: var(--gutter);
+}
+
+@utility container-narrow {
+  width: 100%;
+  max-width: 46rem;
+  margin-inline: auto;
+  padding-inline: var(--gutter);
+}
+
+/* Paper grain. Tiling SVG, not a bitmap — costs nothing to download. */
+@utility grain {
+  position: relative;
+  isolation: isolate;
+
+  &::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    pointer-events: none;
+    opacity: 0.4;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='160' height='160' filter='url(%23n)' opacity='0.35'/%3E%3C/svg%3E");
+  }
+}
+
+/* Optical letter-spacing for large display type. */
+@utility display-tight {
+  letter-spacing: -0.035em;
+}
+
+/* ==========================================================================
+   Motion primitives
+   Every one collapses to a fade — or nothing — under reduced motion.
+   ========================================================================== */
+
+@layer utilities {
+  .reveal-init {
+    opacity: 0;
+    transform: translate3d(0, 1.75rem, 0);
+  }
+
+  .reveal-in {
+    opacity: 1;
+    transform: none;
+    transition:
+      opacity var(--dur-slow) var(--ease-out-soft),
+      transform var(--dur-slow) var(--ease-out-soft);
+  }
+}
+
+/* Hero entrance. Pure CSS so the LCP never waits on an animation library. */
+@layer utilities {
+  .hero-line {
+    animation: hero-line-up var(--dur-reveal) var(--ease-out-soft) both;
+  }
+
+  .hero-fade {
+    animation: hero-fade-up var(--dur-slow) var(--ease-out-soft) both;
+  }
+}
+
+@keyframes hero-line-up {
+  from {
+    transform: translate3d(0, 105%, 0);
+  }
+  to {
+    transform: none;
+  }
+}
+
+@keyframes hero-fade-up {
+  from {
+    opacity: 0;
+    transform: translate3d(0, 1rem, 0);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-line,
+  .hero-fade {
+    animation: none !important;
+    opacity: 1;
+    transform: none;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+
+  .reveal-init {
+    opacity: 0;
+    transform: none;
+  }
+
+  .reveal-in {
+    opacity: 1;
+    transform: none;
+    transition: opacity 200ms linear;
+  }
+}
