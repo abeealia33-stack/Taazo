@@ -11,6 +11,7 @@ import { ProductGallery } from "@/components/product/ProductGallery";
 import { ProductCard } from "@/components/product/ProductCard";
 import { AddToCart } from "@/components/cart/AddToCart";
 import { StickyBuyBar } from "@/components/cart/StickyBuyBar";
+import { buyBoxAnchor } from "@/components/cart/buyBox";
 import { Reveal } from "@/components/motion/Reveal";
 import { formatPKR } from "@/lib/utils";
 import { isBeforeCutoff } from "@/lib/batch";
@@ -153,7 +154,7 @@ export default async function ProductPage({
             {product.description}
           </p>
 
-          <div className="mt-9" data-buybox>
+          <div className="mt-9" {...buyBoxAnchor}>
             <AddToCart product={product} available={available} />
           </div>
 

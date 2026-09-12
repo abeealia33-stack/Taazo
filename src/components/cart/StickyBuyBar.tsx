@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { AddToCart } from "./AddToCart";
 import { cn, formatPKR } from "@/lib/utils";
 import type { CatalogProduct } from "@/lib/catalog";
+import { buyBoxSelector } from "./buyBox";
 
 /**
  * The buy action, brought back once the real one scrolls away.
@@ -21,9 +22,12 @@ export function StickyBuyBar({
   available?: number;
 }) {
   const [shown, setShown] = useState(false);
+  const soldOut = available === 0;
 
   useEffect(() => {
-    const buyBox = document.querySelector("[data-buybox]");
+    if (soldOut) return;
+
+    const buyBox = document.querySelector(buyBoxSelector);
     if (!buyBox) return;
 
     const observer = new IntersectionObserver(
@@ -37,9 +41,9 @@ export function StickyBuyBar({
 
     observer.observe(buyBox);
     return () => observer.disconnect();
-  }, []);
+  }, [soldOut]);
 
-  if (available === 0) return null;
+  if (soldOut) return null;
 
   return (
     <div
