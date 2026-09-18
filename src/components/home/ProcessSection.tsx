@@ -22,6 +22,14 @@ const STEPS = [
   },
 ];
 
+/** The bottle fills from the bottom: y falls as height grows. */
+function setBottleFill(rect: SVGRectElement | null, progress: number) {
+  if (!rect) return;
+  const height = 8 + progress * 150;
+  rect.setAttribute("height", String(height));
+  rect.setAttribute("y", String(182 - height));
+}
+
 /**
  * The pressing sequence: a bottle fills with juice and the label writes itself
  * on as you scroll through the three steps.
@@ -38,19 +46,64 @@ const STEPS = [
  * at all, so React's tree stays exactly as React rendered it. GSAP is then used
  * only for what it is genuinely needed for here: reading scroll progress and
  * scrubbing the fill and the wordmark against it.
+ *
+ * Below lg there is no sticky track to scrub, and pinning a phone screen for
+ * two and a half viewports would be a worse experience than the thing it
+ * animates. That breakpoint instead steps through the same states on
+ * IntersectionObserver alone, so GSAP is never fetched on mobile data.
  */
 export function ProcessSection() {
   const sectionRef = useRef<HTMLElement>(null);
   const fillRef = useRef<SVGRectElement>(null);
   const markRef = useRef<SVGGElement>(null);
+  const stepsRef = useRef<HTMLOListElement>(null);
   const [active, setActive] = useState(0);
   const [enhanced, setEnhanced] = useState(false);
 
   useEffect(() => {
     const section = sectionRef.current;
     if (!section || prefersReducedMotion()) return;
+
     // The tall sticky track only exists at lg; below that it is a plain stack.
-    if (window.matchMedia("(max-width: 1023px)").matches) return;
+    if (window.matchMedia("(max-width: 1023px)").matches) {
+      const steps = stepsRef.current
+        ? (Array.from(stepsRef.current.children) as HTMLElement[])
+        : [];
+      if (steps.length === 0) return;
+
+      const fill = fillRef.current;
+      // Stepped rather than scrubbed, so the fill needs its own easing.
+      if (fill) {
+        fill.style.transition =
+          "height var(--dur-slow) var(--ease-out-soft), y var(--dur-slow) var(--ease-out-soft)";
+      }
+
+      setEnhanced(true);
+
+      // A thin band across the middle of the screen: whichever step crosses it
+      // is the one being read.
+      const observer = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((entry) => {
+            if (!entry.isIntersecting) return;
+            const index = steps.indexOf(entry.target as HTMLElement);
+            if (index < 0) return;
+            setActive(index);
+            setBottleFill(fill, (index + 1) / STEPS.length);
+          });
+        },
+        { rootMargin: "-45% 0px -45% 0px" },
+      );
+
+      steps.forEach((step) => observer.observe(step));
+
+      return () => {
+        observer.disconnect();
+        if (fill) fill.style.transition = "";
+        // The wordmark is never dashed on this path, so nothing to unwind.
+        setBottleFill(fill, 0);
+      };
+    }
 
     let cancelled = false;
     let cleanup: (() => void) | undefined;
@@ -91,12 +144,7 @@ export function ProcessSection() {
             const p = self.progress;
             setActive(Math.min(STEPS.length - 1, Math.floor(p * STEPS.length)));
 
-            if (fillRef.current) {
-              // The bottle fills from the bottom: y falls as height grows.
-              const h = 8 + p * 150;
-              fillRef.current.setAttribute("height", String(h));
-              fillRef.current.setAttribute("y", String(182 - h));
-            }
+            setBottleFill(fillRef.current, p);
 
             // The label writes itself on, letter after letter.
             const drawWindow = Math.min(1, p / 0.65);
@@ -212,7 +260,7 @@ export function ProcessSection() {
             </svg>
           </div>
 
-          <ol className="flex flex-col gap-8">
+          <ol ref={stepsRef} className="flex flex-col gap-8">
             {STEPS.map((step, i) => {
               const isActive = !enhanced || i === active;
               return (
