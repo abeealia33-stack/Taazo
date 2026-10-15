@@ -10,6 +10,9 @@
     "db:push": "prisma db push",
     "db:seed": "tsx prisma/seed.ts",
     "db:studio": "prisma studio",
+    "prelaunch:setup": "prisma db push && tsx scripts/setup-prelaunch.ts",
+    "prelaunch:check": "node --env-file=.env --import tsx scripts/check-prelaunch.ts",
+    "brand:prepare": "tsx scripts/prepare-chulimaar-brand.ts",
     "postinstall": "prisma generate",
     "uploads:sweep": "tsx scripts/sweep-uploads.ts"
   },

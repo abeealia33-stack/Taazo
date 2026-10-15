@@ -3,6 +3,7 @@
 import { z } from "zod";
 import { db } from "@/lib/db";
 import { mailer } from "@/lib/mailer";
+import { PRELAUNCH } from "@/lib/chulimaar";
 
 const LeadSchema = z.object({
   company: z.string().min(2, "Please tell us the company or family name"),
@@ -28,6 +29,7 @@ export async function submitLead(
   _prev: LeadState,
   formData: FormData,
 ): Promise<LeadState> {
+  if (PRELAUNCH) return { ok: false, error: "Orders and corporate enquiries are not open during Chulimaar's pre-launch." };
   const parsed = LeadSchema.safeParse(Object.fromEntries(formData.entries()));
 
   if (!parsed.success) {

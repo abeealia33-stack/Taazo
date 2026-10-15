@@ -1,4 +1,6 @@
 import Link from "next/link";
+import { redirect } from "next/navigation";
+import { PRELAUNCH } from "@/lib/chulimaar";
 import { requireAdmin } from "@/lib/auth";
 import { db } from "@/lib/db";
 import { karachiNow, batchCode, formatTime, nowEpochMs } from "@/lib/batch";
@@ -10,6 +12,7 @@ export const dynamic = "force-dynamic";
 
 export default async function AdminTodayPage() {
   const session = await requireAdmin();
+  if (PRELAUNCH) redirect(session.role === "owner" ? "/admin/launch" : "/admin/account");
 
   const local = karachiNow();
   const startOfDay = new Date(local);

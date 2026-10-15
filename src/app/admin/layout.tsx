@@ -3,7 +3,7 @@ import { getSession } from "@/lib/auth";
 import { AdminNav } from "@/components/admin/AdminNav";
 
 export const metadata: Metadata = {
-  title: { default: "Admin", template: "%s · taazo admin" },
+  title: { default: "Chulimaar Admin", template: "%s · Chulimaar admin" },
   robots: { index: false, follow: false },
 };
 

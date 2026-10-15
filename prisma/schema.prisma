@@ -298,6 +298,20 @@ model Testimonial {
   @@index([active, sortOrder])
 }
 
+// Pre-launch subscribers are independent of the legacy commerce catalogue.
+model LaunchSubscriber {
+  id            String   @id @default(auto()) @map("_id") @db.ObjectId
+  email         String   @unique
+  firstName     String?
+  city          String?
+  noticeVersion String
+  removalTokenHash String @unique
+  source        String   @default("chulimaar-prelaunch")
+  createdAt     DateTime @default(now())
+
+  @@index([createdAt])
+}
+
 model FaqGroup {
   id        String    @id @default(auto()) @map("_id") @db.ObjectId
   heading   String

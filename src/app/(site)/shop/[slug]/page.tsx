@@ -17,9 +17,11 @@ import { formatPKR } from "@/lib/utils";
 import { isBeforeCutoff } from "@/lib/batch";
 import { getLiveBatch, getAvailability } from "@/lib/liveBatch";
 import { SITE } from "@/lib/site";
+import { PRELAUNCH } from "@/lib/chulimaar";
 import { getDeliverySummary } from "@/lib/orders";
 
 export async function generateStaticParams() {
+  if (PRELAUNCH) return [];
   const slugs = await getAllProductSlugs();
   return slugs.map((slug) => ({ slug }));
 }

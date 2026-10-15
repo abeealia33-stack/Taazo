@@ -2,12 +2,15 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Wordmark } from "@/components/brand/Wordmark";
+import { Brand } from "@/components/prelaunch/Brand";
+import { PRELAUNCH } from "@/lib/chulimaar";
 import { logout } from "@/app/admin/login/actions";
 import { cn } from "@/lib/utils";
 import type { AdminSession } from "@/lib/auth";
 
 const LINKS = [
+  { href: "/admin/launch", label: "Launch signups", ownerOnly: true },
+  { href: "/admin/website", label: "Website", ownerOnly: true },
   { href: "/admin", label: "Today", exact: true },
   { href: "/admin/orders", label: "Orders" },
   { href: "/admin/batches", label: "Batches" },
@@ -25,14 +28,14 @@ const LINKS = [
 export function AdminNav({ session }: { session: AdminSession }) {
   const pathname = usePathname();
   const links = LINKS.filter(
-    (l) => !l.ownerOnly || session.role === "owner",
+    (l) => (!l.ownerOnly || session.role === "owner") && (!PRELAUNCH || ["/admin/launch", "/admin/website", "/admin/account"].includes(l.href)),
   );
 
   return (
     <header className="sticky top-0 z-40 border-b border-sand-300 bg-cream">
       <div className="mx-auto flex max-w-6xl items-center justify-between gap-4 px-4 py-3 md:px-6">
         <Link href="/admin" className="flex items-center gap-3 text-terracotta">
-          <Wordmark className="h-5 w-auto" decorative />
+          <Brand />
           <span className="text-2xs uppercase tracking-[0.16em] text-sand-500">
             admin
           </span>

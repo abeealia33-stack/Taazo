@@ -12,8 +12,8 @@ import { PRODUCTS } from "../src/data/products";
 
 const db = new PrismaClient();
 
-const ADMIN_EMAIL = "abeealia33@gmail.com";
-const ADMIN_PASSWORD = "taazo-admin"; // ⚠ change on first login
+const ADMIN_EMAIL = "admin@chulimaar.com";
+const ADMIN_PASSWORD = "chulimaar-admin"; // ⚠ change before public launch
 
 /** ⚠ ASSUMED — Lahore areas, fees and minimums are guesses. */
 const ZONES = [

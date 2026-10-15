@@ -1,4 +1,18 @@
-# taazo.
+# Chulimaar pre-launch
+
+The public website now introduces Chulimaar's culinary apricot kernel oil and collects launch interest. Its logo system pairs the title-case Chulimaar wordmark with the supplied apricot and ridge artwork. Designed photo spaces remain until authentic photos are supplied. Ordering is disabled during pre-launch.
+
+Run `npm run prelaunch:setup` with the existing MongoDB running, then `npm run dev`. The owner signup dashboard is `/admin/launch`. Do not run the legacy seed to configure pre-launch.
+
+Owners can edit homepage text, photographs, FAQs and footer contacts at `/admin/website` (**Website** in the admin navigation). Upload photos, set descriptions/crop focus, then **Save changes** to publish. This uses the existing MongoDB `Setting` collection; no catalogue reseed is required. MongoDB must be running for admin login and saves.
+
+The default **Photos & banners** tab shows all six upload placeholders together, with recommended dimensions and **Upload image / Replace image / Remove image** controls. Photo controls also appear first in the Hero, Founder, Product and Process editors.
+
+See [implementation and asset configuration](docs/CHULIMAAR-IMPLEMENTATION.md) and [the blueprint](docs/CHULIMAAR-PRELAUNCH-BLUEPRINT.md). Set `CHULIMAAR_SITE_URL` before deployment. No launch emails are sent automatically.
+
+## Legacy Taazo reference
+
+The following describes the retained commerce implementation, rather than the current public pre-launch page.
 
 Cold-pressed juice, fresh fruit jars and iced tea — storefront, checkout and admin panel.
 
@@ -16,7 +30,7 @@ npm run dev         # http://localhost:3000
 ```
 
 **Admin panel:** <http://localhost:3000/admin>
-Email `abeealia33@gmail.com`, password `taazo-admin` — **change this before launch** (see below).
+Default seeded email `admin@chulimaar.com`, password `chulimaar-admin` — **change this before launch** (see below). Existing accounts need a database credential update; rerunning the catalogue seed does not reset their passwords.
 
 ### Scripts
 

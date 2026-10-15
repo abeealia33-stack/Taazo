@@ -18,6 +18,7 @@ import {
 } from "@/lib/stock";
 import { karachiNow, isBeforeCutoff } from "@/lib/batch";
 import { formatPKR } from "@/lib/utils";
+import { PRELAUNCH } from "@/lib/chulimaar";
 
 const LineSchema = z.object({
   slug: z.string().min(1),
@@ -64,6 +65,7 @@ export async function placeOrder(
   _prev: CheckoutState,
   formData: FormData,
 ): Promise<CheckoutState> {
+  if (PRELAUNCH) return { ok: false, error: "Chulimaar is preparing its first batch. Orders are not open yet." };
   // ---- parse ----
   let payload: unknown;
   try {

@@ -1,4 +1,5 @@
 import { NextResponse, type NextRequest } from "next/server";
+import { PRELAUNCH } from "@/lib/chulimaar";
 
 /**
  * Edge-level gate for the admin panel.
@@ -15,6 +16,15 @@ import { NextResponse, type NextRequest } from "next/server";
 export default function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
+  if (PRELAUNCH && !pathname.startsWith("/admin")) {
+    const sections: Record<string, string> = { "/story": "our-story", "/faq": "faqs", "/contact": "contact", "/reels": "our-process" };
+    const url = request.nextUrl.clone();
+    url.pathname = "/";
+    url.search = "";
+    url.hash = sections[pathname] || "launch-updates";
+    return NextResponse.redirect(url, 307);
+  }
+
   if (pathname.startsWith("/admin") && !pathname.startsWith("/admin/login")) {
     const hasCookie = request.cookies.has("taazo_admin");
     if (!hasCookie) {
@@ -29,5 +39,5 @@ export default function proxy(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ["/admin/:path*"],
+  matcher: ["/admin/:path*", "/shop/:path*", "/gifting/:path*", "/cart/:path*", "/checkout/:path*", "/corporate/:path*", "/story", "/faq", "/contact", "/reels", "/terms", "/refunds", "/style"],
 };

@@ -1,5 +1,7 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  // Isolated browser/integration QA must not overwrite the normal dev build.
+  distDir: process.env.CHULIMAAR_CMS_QA === "1" ? ".tmp/cms-next" : ".next",
   experimental: {
     /**
      * Server Actions cap request bodies at 1MB by default. Media no longer

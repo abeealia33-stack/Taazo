@@ -1,4 +1,6 @@
 import Image from "next/image";
+import { redirect } from "next/navigation";
+import { PRELAUNCH } from "@/lib/chulimaar";
 import { requireOwner } from "@/lib/auth";
 import { db } from "@/lib/db";
 import { formatPKR } from "@/lib/utils";
@@ -62,6 +64,7 @@ function AccentPicker({ name, defaultValue }: { name: string; defaultValue: stri
 
 export default async function AdminContentPage() {
   await requireOwner();
+  if (PRELAUNCH) redirect("/admin/website");
 
   const [testimonials, faqGroups, chapters, tiers] = await Promise.all([
     db.testimonial.findMany({ orderBy: { sortOrder: "asc" } }),

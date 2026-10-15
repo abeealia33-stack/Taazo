@@ -8,6 +8,7 @@
 import { readdir, stat, unlink } from "fs/promises";
 import path from "path";
 import { db } from "../src/lib/db";
+import { HOMEPAGE_KEY, homepageSchema } from "../src/lib/homepage-schema";
 
 async function walk(dir: string): Promise<string[]> {
   const out: string[] = [];
@@ -24,6 +25,13 @@ async function walk(dir: string): Promise<string[]> {
 
 (async () => {
   const referenced = new Set<string>();
+
+  const homepage = await db.setting.findUnique({ where: { key: HOMEPAGE_KEY } });
+  if (homepage) {
+    // Abort on invalid saved content; never mistake its photographs for orphans.
+    const content = homepageSchema.parse(JSON.parse(homepage.value));
+    for (const image of Object.values(content.images)) if (image.url) referenced.add(image.url);
+  }
 
   for (const p of await db.product.findMany()) p.photos.forEach((u) => referenced.add(u));
   for (const c of await db.category.findMany()) if (c.photo) referenced.add(c.photo);
@@ -49,6 +57,8 @@ async function walk(dir: string): Promise<string[]> {
   const orphans: { file: string; url: string; bytes: number }[] = [];
   for (const file of files) {
     const url = "/uploads/" + path.relative(root, file).split(path.sep).join("/");
+    // Give newly uploaded, unpublished editor photographs a day to be saved.
+    if (url.startsWith("/uploads/chulimaar/") && Date.now() - (await stat(file)).mtimeMs < 86_400_000) continue;
     if (!referenced.has(url)) {
       orphans.push({ file, url, bytes: (await stat(file)).size });
     }

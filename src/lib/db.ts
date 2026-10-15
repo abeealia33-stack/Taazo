@@ -12,7 +12,8 @@ const globalForPrisma = globalThis as unknown as {
 export const db =
   globalForPrisma.prisma ??
   new PrismaClient({
-    log: process.env.NODE_ENV === "development" ? ["warn", "error"] : ["error"],
+    // Callers handle errors; Prisma error rendering can include submitted contact data.
+    log: process.env.NODE_ENV === "development" ? ["warn"] : [],
   });
 
 if (process.env.NODE_ENV !== "production") globalForPrisma.prisma = db;

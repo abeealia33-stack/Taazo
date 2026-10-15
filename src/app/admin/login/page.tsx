@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { redirect } from "next/navigation";
 import { getSession } from "@/lib/auth";
-import { Wordmark } from "@/components/brand/Wordmark";
+import { Brand } from "@/components/prelaunch/Brand";
 import { LoginForm } from "./LoginForm";
 
 export const metadata: Metadata = {
@@ -17,12 +17,12 @@ export default async function LoginPage() {
   return (
     <div className="grid min-h-[80vh] place-items-center px-5 py-16">
       <div className="w-full max-w-sm">
-        <Wordmark className="mx-auto h-8 w-auto text-terracotta" decorative />
+        <div className="text-center text-charcoal"><Brand /></div>
         <h1 className="mt-8 text-center text-2xl tracking-tight text-charcoal">
           Admin
         </h1>
         <p className="mt-2 text-center text-sm text-sand-600">
-          Orders, batches and stock.
+          Chulimaar launch interest and business tools.
         </p>
         <LoginForm />
       </div>

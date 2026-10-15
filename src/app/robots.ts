@@ -1,15 +1,6 @@
 import type { MetadataRoute } from "next";
-
-const BASE = process.env.NEXT_PUBLIC_SITE_URL ?? "https://taazo.pk";
+import { CHULIMAAR } from "@/lib/chulimaar";
 
 export default function robots(): MetadataRoute.Robots {
-  return {
-    rules: {
-      userAgent: "*",
-      allow: "/",
-      // Nothing here is secret, but none of it belongs in search results.
-      disallow: ["/admin", "/checkout", "/cart", "/style", "/track"],
-    },
-    sitemap: `${BASE}/sitemap.xml`,
-  };
+  return { rules: { userAgent: "*", allow: "/", disallow: ["/admin", "/api", "/track", "/launch-preferences", "/shop", "/checkout", "/cart", "/style"] }, sitemap: `${CHULIMAAR.siteUrl}/sitemap.xml` };
 }
