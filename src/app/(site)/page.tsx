@@ -2,21 +2,22 @@
 import { MediaPanel } from "@/components/prelaunch/MediaPanel";
 import { LaunchForm } from "@/components/prelaunch/LaunchForm";
 import { BrandDivider } from "@/components/prelaunch/Logo";
-import type { HomepageContent } from "@/lib/homepage-schema";
+import { PHOTO_FIELDS, type HomepageContent, type PhotoKey } from "@/lib/homepage-schema";
 
 export const metadata = { alternates: { canonical: "/" } };
 
-function Photo({ image, kind, priority = false }: { image: HomepageContent["images"]["hero"]; kind?: "hero" | "portrait"; priority?: boolean }) {
-  return <MediaPanel photo={image.url || null} alt={image.alt} label={image.caption} caption="" kind={kind} priority={priority} position={image.position} />;
+function Photo({ image, slot, kind, priority = false }: { image: HomepageContent["images"]["hero"]; slot: PhotoKey; kind?: "hero" | "portrait"; priority?: boolean }) {
+  const placeholderLabel = PHOTO_FIELDS.find((photo) => photo.key === slot)!.label;
+  return <MediaPanel photo={image.url || null} alt={image.alt} label={image.caption} placeholderLabel={placeholderLabel} kind={kind} priority={priority} position={image.position} />;
 }
 
 export default async function HomePage() {
   const { text: t, images, faqs } = await getHomepageContent();
   const steps = [
-    { number: "01", title: t.kernelsTitle, body: t.kernelsBody, image: images.kernels },
-    { number: "02", title: t.pressingTitle, body: t.pressingBody, image: images.pressing },
-    { number: "03", title: t.bottleTitle, body: t.bottleBody, image: images.bottle },
-  ];
+    { number: "01", title: t.kernelsTitle, body: t.kernelsBody, image: images.kernels, slot: "kernels" },
+    { number: "02", title: t.pressingTitle, body: t.pressingBody, image: images.pressing, slot: "pressing" },
+    { number: "03", title: t.bottleTitle, body: t.bottleBody, image: images.bottle, slot: "bottle" },
+  ] as const;
   return <>
     <section className="cm-container cm-hero" aria-labelledby="hero-title">
       <div className="cm-hero-copy">
@@ -26,18 +27,18 @@ export default async function HomePage() {
         <p className="cm-body">{t.heroBody}</p>
         <div className="cm-actions"><a className="cm-button" href="#launch-updates">{t.launchCta}<span aria-hidden="true">↓</span></a><a className="cm-text-link" href="#our-story">{t.founderCta}<span aria-hidden="true">↓</span></a></div>
       </div>
-      <Photo image={images.hero} kind="hero" priority />
+      <Photo image={images.hero} slot="hero" kind="hero" priority />
     </section>
     <div className="cm-place-strip"><div className="cm-container"><span>{t.stripOne}</span><span>{t.stripTwo}</span><span>{t.stripThree}</span></div></div>
     <BrandDivider />
-    <section className={`cm-container cm-section cm-oil ${!images.oil.url ? "cm-oil-no-photo" : ""}`} id="our-oil" aria-labelledby="oil-title">
-      {images.oil.url && <Photo image={images.oil} />}
+    <section className="cm-container cm-section cm-oil" id="our-oil" aria-labelledby="oil-title">
+      <Photo image={images.oil} slot="oil" />
       <div className="cm-section-copy"><p className="cm-eyebrow">{t.oilEyebrow}</p><h2 id="oil-title">{t.oilTitle}<br /><em>{t.oilTitleEm}</em></h2><p className="cm-body">{t.oilBody}</p></div>
       <div className="cm-product-details"><dl className="cm-facts"><div><dt>{t.focusLabel}</dt><dd>{t.focusValue}</dd></div><div><dt>{t.productionLabel}</dt><dd>{t.productionValue}</dd></div><div><dt>{t.availabilityLabel}</dt><dd>{t.availabilityValue}</dd></div></dl><p className="cm-small-note">{t.oilNote}</p></div>
     </section>
-    <section className="cm-process cm-section" id="our-process" aria-labelledby="process-title"><div className="cm-container"><div className="cm-section-heading"><div><p className="cm-eyebrow">{t.processEyebrow}</p><h2 id="process-title">{t.processTitle} <em>{t.processTitleEm}</em></h2></div><p style={{ whiteSpace: "pre-line" }}>{t.processIntro}</p></div><div className="cm-steps">{steps.map((step) => <article key={step.number}>{step.image.url && <Photo image={step.image} />}<div className="cm-step-title"><span>{step.number}</span><h3>{step.title}</h3></div><p className="cm-body">{step.body}</p></article>)}</div></div></section>
+    <section className="cm-process cm-section" id="our-process" aria-labelledby="process-title"><div className="cm-container"><div className="cm-section-heading"><div><p className="cm-eyebrow">{t.processEyebrow}</p><h2 id="process-title">{t.processTitle} <em>{t.processTitleEm}</em></h2></div><p style={{ whiteSpace: "pre-line" }}>{t.processIntro}</p></div><div className="cm-steps">{steps.map((step) => <article key={step.number}><Photo image={step.image} slot={step.slot} /><div className="cm-step-title"><span>{step.number}</span><h3>{step.title}</h3></div><p className="cm-body">{step.body}</p></article>)}</div></div></section>
     <BrandDivider />
-    <section className={`cm-container cm-section cm-story ${!images.founder.url ? "cm-story-no-photo" : ""}`} id="our-story" aria-labelledby="story-title"><div className="cm-section-copy"><p className="cm-eyebrow">{t.founderEyebrow}</p><h2 id="story-title">{t.founderTitle}<br /><em>{t.founderTitleEm}</em></h2></div><div className="cm-founder-copy"><p className="cm-founder-quote">{t.founderQuote}</p><p className="cm-body">{t.founderBody}</p><p className="cm-founder-signature">{t.founderName}<span>{t.founderLocation}</span></p></div>{images.founder.url && <Photo image={images.founder} kind="portrait" />}</section>
+    <section className="cm-container cm-section cm-story" id="our-story" aria-labelledby="story-title"><div className="cm-section-copy"><p className="cm-eyebrow">{t.founderEyebrow}</p><h2 id="story-title">{t.founderTitle}<br /><em>{t.founderTitleEm}</em></h2></div><div className="cm-founder-copy"><p className="cm-founder-quote">{t.founderQuote}</p><p className="cm-body">{t.founderBody}</p><p className="cm-founder-signature">{t.founderName}<span>{t.founderLocation}</span></p></div><Photo image={images.founder} slot="founder" kind="portrait" /></section>
     <section className="cm-launch" id="launch-updates" aria-labelledby="launch-title"><div className="cm-container cm-launch-inner"><div><p className="cm-eyebrow">{t.launchEyebrow}</p><h2 id="launch-title">{t.launchTitle}<br /><em>{t.launchTitleEm}</em></h2><p className="cm-body">{t.launchBody}</p></div><LaunchForm text={{ submitLabel: t.submitLabel, successTitle: t.successTitle, successBody: t.successBody }} /></div></section>
     <section className="cm-container cm-section cm-faq" id="faqs" aria-labelledby="faq-title"><div><p className="cm-eyebrow">{t.faqEyebrow}</p><h2 id="faq-title">{t.faqTitle} <em>{t.faqTitleEm}</em></h2><p className="cm-body">{t.faqBody}</p></div><div className="cm-faq-list">{faqs.map((faq, index) => <details key={`${index}-${faq.question}`}><summary>{faq.question}<span aria-hidden="true">+</span></summary><p>{faq.answer}</p></details>)}</div></section>
   </>;

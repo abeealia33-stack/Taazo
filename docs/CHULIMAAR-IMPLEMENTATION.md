@@ -1,5 +1,18 @@
 # Chulimaar pre-launch implementation
 
+## Public photo placeholders — 16 October 2026
+
+All six public photo positions now remain visible when no photograph has been
+added: hero, product, kernels, pressing, bottling and founder. Warm, dashed frames
+show an image icon, the photo label and “Photo coming soon”. The hero placeholder
+replaces the previous apricot illustration. Configured photographs automatically
+replace their placeholders and retain their captions and crop settings. Mobile
+process frames use a 4:3 ratio so the placeholder labels fit comfortably.
+
+This supersedes the earlier missing-photo and hero-illustration behaviour
+described below. Online admin uploads still require the production database and
+persistent image storage described in `HOSTINGER-DEPLOYMENT.md`.
+
 The public website is now a single Chulimaar introduction with an email signup. Existing catalogue, orders, admin accounts and commerce code are preserved. Public shopping routes redirect to launch interest and checkout/corporate actions reject writes while `PRELAUNCH` is true.
 
 ## Run locally

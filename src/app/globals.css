@@ -56,8 +56,9 @@
 .cm-media { position: relative; overflow: hidden; background: #eee4d3; min-width: 0; aspect-ratio: 4/3; }
 .cm-media-hero { aspect-ratio: 1/1; background: var(--cm-sand); border-radius: 3px; }
 .cm-media-portrait { aspect-ratio: 4/5; background: #e9e5d8; }
-.cm-media-empty { display: flex; flex-direction: column; align-items: flex-start; justify-content: space-between; height: 100%; padding: 30px; }
-.cm-media-title { font-family: var(--cm-serif); font-size: clamp(2.5rem, 4vw, 4.5rem); letter-spacing: -.055em; line-height: 1.06; }
+.cm-media-empty { position: absolute; inset: 14px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 14px; border: 1px dashed #a68b6f; padding: 24px; text-align: center; }
+.cm-placeholder-icon { flex: none; color: #846a52; margin-bottom: 6px; }
+.cm-media-title { max-width: 14ch; font-family: var(--cm-serif); font-size: clamp(1.5rem, 2.5vw, 2.4rem); letter-spacing: -.035em; line-height: 1.15; }
 .cm-media-caption { max-width: 260px; font-size: .78rem; line-height: 1.65; color: #624b3a; }
 .cm-media-rule { width: 45px; height: 1px; background: #ad9476; margin-block: 30px; }
 .cm-mountain { width: 100%; opacity: .52; margin-block: 10px 0; }
@@ -72,8 +73,8 @@
 .cm-facts { margin-top: 0; border-top: 1px solid var(--cm-line); }
 .cm-facts > div { display: flex; justify-content: space-between; gap: 20px; padding-block: 16px; border-bottom: 1px solid var(--cm-line); font-size: 1rem; }
 .cm-facts dd { text-align: right; }
-.cm-oil:not(.cm-oil-no-photo) .cm-product-details { grid-column: 2; }
-.cm-oil:not(.cm-oil-no-photo) .cm-media { grid-row: span 2; }
+.cm-oil .cm-product-details { grid-column: 2; }
+.cm-oil .cm-media { grid-row: span 2; }
 .cm-facts dt { color: var(--cm-muted); }
 .cm-small-note { font-size: .875rem; color: var(--cm-muted); line-height: 1.7; margin-top: 17px; }
 .cm-process { background: #f0eadd; }
@@ -91,7 +92,7 @@
 .cm-step-title > span { font-size: .8125rem; color: #596039; }
 .cm-steps .cm-body { font-size: 1rem; }
 .cm-story { grid-template-columns: 1fr 1fr; }
-.cm-story:not(.cm-story-no-photo) .cm-media { grid-column: 2; grid-row: 1 / span 2; }
+.cm-story .cm-media { grid-column: 2; grid-row: 1 / span 2; }
 .cm-founder-copy .cm-body { margin-top: 18px; }
 .cm-founder-quote { font-family: var(--cm-serif); font-size: 1.65rem; line-height: 1.5; max-width: 470px; }
 .cm-founder-signature { margin-top: 26px; font-size: .85rem; }
@@ -150,7 +151,7 @@
 @media (min-width: 761px) and (max-height: 760px) { .cm-header-inner { min-height: 80px; } .cm-hero { padding-block: 32px 40px; } .cm-status { margin-bottom: 18px; } }
 @media (max-width: 1100px) { .cm-container { width: calc(100% - 64px); } .cm-desktop-nav { gap: 18px; } .cm-hero, .cm-oil, .cm-story, .cm-launch-inner, .cm-faq { gap: 42px; } }
 @media (max-width: 1000px) { .cm-desktop-nav { display: none; } .cm-menu-toggle { display: block; } .cm-header-cta { margin-left: auto; } .cm-mobile-nav:not([hidden]) { display: flex; flex-direction: column; gap: 0; padding-block: 12px 24px; } .cm-mobile-nav > a { padding-block: 13px; } .cm-mobile-nav .cm-button { margin-top: 12px; } }
-@media (max-width: 760px) { .cm-container { width: calc(100% - 40px); } .cm-header-inner { min-height: 78px; gap: 14px; } .cm-wordmark { font-size: 1.85rem; } .cm-header-cta { display: none; } .cm-logo { width: 155px; } .cm-hero { grid-template-columns: 1fr; padding-block: 32px 36px; gap: 28px; } .cm-site h1 { font-size: clamp(2.5rem, 8.7vw, 4rem); } .cm-status { margin-bottom: 18px; } .cm-hero .cm-media-hero { aspect-ratio: 1/1; } .cm-place-strip > div { flex-wrap: wrap; justify-content: center; gap: 8px 24px; text-align: center; } .cm-place-strip span:last-child { display: none; } .cm-section { padding-block: 46px; } .cm-oil, .cm-story, .cm-launch-inner, .cm-faq { grid-template-columns: 1fr; gap: 28px; } .cm-oil .cm-section-copy { order: -1; } .cm-oil .cm-media { aspect-ratio: 4/3; } .cm-oil:not(.cm-oil-no-photo) .cm-product-details, .cm-story:not(.cm-story-no-photo) .cm-media { grid-column: auto; grid-row: auto; } .cm-section-heading { display: block; margin-bottom: 28px; } .cm-section-heading > p { margin-top: 18px; } .cm-steps { grid-template-columns: 1fr; gap: 24px; } .cm-steps .cm-media { aspect-ratio: 16/9; } .cm-story .cm-media { max-height: 420px; } .cm-launch { padding-block: 46px; } .cm-launch-form { padding: 22px; } .cm-faq .cm-body { max-width: none; } .cm-footer-top { grid-template-columns: 1fr; gap: 28px; } .cm-footer-bottom { flex-direction: column; align-items: start; gap: 2px; } .cm-footer { padding-top: 40px; } }
+@media (max-width: 760px) { .cm-container { width: calc(100% - 40px); } .cm-header-inner { min-height: 78px; gap: 14px; } .cm-wordmark { font-size: 1.85rem; } .cm-header-cta { display: none; } .cm-logo { width: 155px; } .cm-hero { grid-template-columns: 1fr; padding-block: 32px 36px; gap: 28px; } .cm-site h1 { font-size: clamp(2.5rem, 8.7vw, 4rem); } .cm-status { margin-bottom: 18px; } .cm-hero .cm-media-hero { aspect-ratio: 1/1; } .cm-place-strip > div { flex-wrap: wrap; justify-content: center; gap: 8px 24px; text-align: center; } .cm-place-strip span:last-child { display: none; } .cm-section { padding-block: 46px; } .cm-oil, .cm-story, .cm-launch-inner, .cm-faq { grid-template-columns: 1fr; gap: 28px; } .cm-oil .cm-section-copy { order: -1; } .cm-oil .cm-media { aspect-ratio: 4/3; } .cm-oil .cm-product-details, .cm-story .cm-media { grid-column: auto; grid-row: auto; } .cm-section-heading { display: block; margin-bottom: 28px; } .cm-section-heading > p { margin-top: 18px; } .cm-steps { grid-template-columns: 1fr; gap: 24px; } .cm-steps .cm-media { aspect-ratio: 4/3; } .cm-story .cm-media { max-height: 420px; } .cm-launch { padding-block: 46px; } .cm-launch-form { padding: 22px; } .cm-faq .cm-body { max-width: none; } .cm-footer-top { grid-template-columns: 1fr; gap: 28px; } .cm-footer-bottom { flex-direction: column; align-items: start; gap: 2px; } .cm-footer { padding-top: 40px; } }
 @media (max-width: 360px) { .cm-form-row { grid-template-columns: 1fr; } .cm-actions { gap: 16px; } .cm-site h1 { font-size: 2.3rem; } }
 @media (max-width: 760px) { .cm-header .cm-brand-horizontal { width: 200px; } .cm-footer .cm-brand-stacked { width: 184px; margin-left: -32px; } .cm-brand-divider { padding-block: 15px; } }
 
