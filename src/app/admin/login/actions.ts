@@ -70,7 +70,20 @@ export async function login(
     clearFailedLogins(key);
   } catch (error) {
     // Database errors can contain connection details or submitted addresses.
-    console.error("Admin sign-in service unavailable.", error instanceof Error ? error.name : "UnknownError");
+    const message = error instanceof Error ? error.message : "";
+    const category = /could not locate[\s\S]*(?:query engine|engine)/i.test(message) ? "engine_missing"
+      : /unable to require|cannot open shared object|GLIBC_|libssl|openssl/i.test(message) ? "engine_runtime"
+      : /authentication failed|SCRAM|bad auth/i.test(message) ? "database_auth"
+      : /DNS|name resolution|lookup|resolve.*host/i.test(message) ? "database_dns"
+      : /TLS|SSL|certificate/i.test(message) ? "database_tls"
+      : /server selection|connect.*timed out|reach database/i.test(message) ? "database_unreachable"
+      : "unknown";
+    const rawCode = error && typeof error === "object"
+      ? ("errorCode" in error ? error.errorCode : "code" in error ? error.code : "") : "";
+    const code = typeof rawCode === "string" && /^[A-Z0-9_]{1,40}$/.test(rawCode) ? rawCode : "none";
+    console.error("Admin sign-in service unavailable.", {
+      name: error instanceof Error ? error.name : "UnknownError", code, category,
+    });
     return { error: "Admin sign-in is temporarily unavailable. Please try again shortly." };
   }
 
