@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { redirect } from "next/navigation";
-import { getSession } from "@/lib/auth";
+import { getAdminLoginSetupError, getSession } from "@/lib/auth";
 import { Brand } from "@/components/prelaunch/Brand";
 import { LoginForm } from "./LoginForm";
 
@@ -24,7 +24,7 @@ export default async function LoginPage() {
         <p className="mt-2 text-center text-sm text-sand-600">
           Chulimaar launch interest and business tools.
         </p>
-        <LoginForm />
+        <LoginForm unavailableReason={getAdminLoginSetupError()} />
       </div>
     </div>
   );

@@ -20,7 +20,7 @@ export default function AdminError({
         This screen failed to load
       </h1>
       <p className="mt-2 max-w-lg text-sm text-sand-700">
-        {error.message || "An unexpected error occurred."}
+        We couldn&apos;t load this admin page. Please try again in a moment.
       </p>
       {error.digest && (
         <p className="mt-1 text-xs text-sand-500">reference {error.digest}</p>

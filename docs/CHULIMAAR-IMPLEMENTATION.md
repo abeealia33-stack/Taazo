@@ -1,5 +1,22 @@
 # Chulimaar pre-launch implementation
 
+## Admin sign-in availability — 16 October 2026
+
+The login page displays a setup message and disables sign-in when `DATABASE_URL`
+or `AUTH_SECRET` is missing. The login action also checks this configuration and
+returns an inline error for database/service failures. It only issues a session
+after the login record and audit write succeed; successful redirects remain
+outside the error handler. The admin error boundary shows a readable retry message
+and a reference rather than a minified React error. This improves error handling;
+the production database, session secret and owner account still need configuring.
+
+Verification: production build, TypeScript and ESLint passed. HTTP checks against
+isolated production-mode servers covered missing database/secret configuration,
+an unreachable database, generic rejection of wrong or unknown credentials, a
+successful owner session and editor access, and refusal to issue a session when
+the audit write fails. Database checks used a disposable local replica set on
+port 27020, never the normal business database.
+
 ## Public photo placeholders — 16 October 2026
 
 All six public photo positions now remain visible when no photograph has been

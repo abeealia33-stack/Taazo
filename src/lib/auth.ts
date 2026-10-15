@@ -19,6 +19,14 @@ import { db } from "./db";
 const COOKIE = "taazo_admin";
 const MAX_AGE_DAYS = 30;
 
+/** The public site can launch before admin services have been configured. */
+export function getAdminLoginSetupError(): string | null {
+  if (!process.env.DATABASE_URL?.trim() || !process.env.AUTH_SECRET?.trim()) {
+    return "Admin sign-in is not set up yet. Please contact the site owner.";
+  }
+  return null;
+}
+
 function secret() {
   const value = process.env.AUTH_SECRET;
   if (!value) {
