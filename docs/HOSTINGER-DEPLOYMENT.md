@@ -27,7 +27,7 @@ Set these in Hostinger's environment variable editor:
 
 Update both values when connecting the final domain, then redeploy.
 
-## Database and uploads still required
+## Database and admin
 
 The public homepage can render default content without a database. Signup storage,
 owner login and homepage editing require a reachable MongoDB replica set, such as
@@ -39,6 +39,18 @@ securely migrate the existing owner account and any saved homepage content; do n
 run the legacy catalogue seed to initialise production. Review the schema changes
 and run `npm run prelaunch:setup` against the intended database from an authorised
 environment. Never commit connection strings, secrets or `.env` files.
+
+MongoDB Atlas and the production session secret were configured on 16 October
+2026. The `chulimaar` database has its schema, signup expiry index and an approved
+owner account. Live owner sign-in, the signup dashboard, website editor access
+and saving existing homepage content were verified. Credentials are kept outside Git.
+
+Hostinger's runtime could not resolve the Atlas SRV address. Its `DATABASE_URL`
+therefore uses the equivalent standard `mongodb://` seed list with TLS enabled,
+the cluster's replica set and `authSource=admin`. Keep the full seed list when
+updating this value; it uses the same database credentials and permissions.
+
+## Photo storage still required
 
 Uploaded photographs also need persistent storage before using the admin image
 editor. The existing adapter supports Vercel Blob through `BLOB_READ_WRITE_TOKEN`.

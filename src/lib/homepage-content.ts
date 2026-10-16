@@ -17,11 +17,16 @@ export function homepageDefaults() {
 const cmsGlobal = globalThis as unknown as { homepageDb?: PrismaClient; homepageRead?: Promise<HomepageContent>; homepageLastGood?: HomepageContent };
 function publicDb() {
   if (!cmsGlobal.homepageDb) {
-    const url = new URL(process.env.DATABASE_URL!);
+    const connection = process.env.DATABASE_URL!;
+    // MongoDB seed lists can contain multiple host:port pairs, which the web URL
+    // parser rejects. Only edit the query; preserve the driver's connection syntax.
+    const queryStart = connection.indexOf("?");
+    const base = queryStart < 0 ? connection : connection.slice(0, queryStart);
+    const options = new URLSearchParams(queryStart < 0 ? "" : connection.slice(queryStart + 1));
     // Editorial reads fail quickly so an offline database does not blank the pre-launch page.
-    url.searchParams.set("serverSelectionTimeoutMS", "1000");
-    url.searchParams.set("connectTimeoutMS", "1000");
-    cmsGlobal.homepageDb = new PrismaClient({ datasourceUrl: url.toString(), log: [] });
+    options.set("serverSelectionTimeoutMS", "1000");
+    options.set("connectTimeoutMS", "1000");
+    cmsGlobal.homepageDb = new PrismaClient({ datasourceUrl: `${base}?${options}`, log: [] });
   }
   return cmsGlobal.homepageDb;
 }
