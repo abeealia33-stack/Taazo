@@ -126,8 +126,8 @@ application connects to the existing account, publishing and signup actions.
   Escape close and focus return. Save and upload errors are visible in the panel.
 - A matching in-page dialog protects unsaved edits during navigation and signout.
   Reload/close retains the browser's standard unsaved-change protection.
-- Production uploads stay disabled until persistent photo storage is configured.
-  Owner and same-origin checks also remain enforced at the upload endpoint; the
+- Homepage photos now use the existing Atlas database for persistent storage when
+  no Blob token is configured. Owner and same-origin checks remain enforced; the
   configured public site origin handles reverse-proxy/internal-host differences.
 - Subscriber totals, CSV export, pagination and account protections retain their
   real server actions. Out-of-range subscriber pages are clamped to the last page.

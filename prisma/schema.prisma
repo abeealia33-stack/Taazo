@@ -20,6 +20,16 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+// Public homepage photographs live outside deployment files so Git pushes do
+// not remove them. The content hash is the immutable image id and deduplicates
+// repeated uploads. Only processed WebP images up to 4 MiB are stored here.
+model HomepageImage {
+  id        String   @id @map("_id")
+  data      Bytes
+  byteSize  Int
+  createdAt DateTime @default(now())
+}
+
 // ---------------------------------------------------------------- catalogue
 
 model Category {

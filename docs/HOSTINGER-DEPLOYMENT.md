@@ -50,22 +50,43 @@ therefore uses the equivalent standard `mongodb://` seed list with TLS enabled,
 the cluster's replica set and `authSource=admin`. Keep the full seed list when
 updating this value; it uses the same database credentials and permissions.
 
-## Photo storage still required
+## Homepage photo storage
 
-Uploaded photographs also need persistent storage before using the admin image
-editor. The existing adapter supports Vercel Blob through `BLOB_READ_WRITE_TOKEN`.
-Uploads written into a deployment's `public/uploads` directory are not a durable
-store across redeployments. Keep credentials in Hostinger's environment settings.
-The production homepage editor and its upload endpoint keep uploads disabled
-until the persistent storage token is configured; existing image descriptions,
-captions, crop controls and public placeholders remain available.
+Homepage photographs use the existing MongoDB `DATABASE_URL` for persistent
+storage when `BLOB_READ_WRITE_TOKEN` is empty. No additional account or API key is
+required. The `HomepageImage` collection stores processed WebP bytes independently
+of Hostinger's build directories. Uploads accept JPG, PNG, WebP or AVIF up to 8 MiB,
+resize to a maximum of 2200px, and cap the processed result at 4 MiB.
+
+Image URLs use `/media/chulimaar/<sha256>.webp`, with immutable browser caching.
+Uploading the same processed image reuses its URL and database record. Saving the
+homepage publishes the selected image; uploading alone prepares its preview.
+Replacing/removing a photo from the homepage does not delete its original stored
+record, so existing public URLs remain valid. Images count toward Atlas storage.
+
+The collection has only its standard MongoDB primary-key index and is created on
+the first upload. Deployment's existing `prisma generate` step includes the new
+model; no reset, seed, or destructive schema migration is needed.
+
+Setting `BLOB_READ_WRITE_TOKEN` optionally uses Vercel Blob for new uploads instead.
+Previously stored Atlas images remain available through the media route. Legacy
+catalogue/video/payment-proof uploads still use the separate storage adapter and
+need Vercel Blob before relying on them across deployments. Do not use a build's
+`public/uploads` directory as durable production storage.
 
 ## Verification
+
+The Atlas-backed homepage photo implementation was checked in production mode
+against a disposable local replica set on 16 October 2026. Verified real image
+decoding/WebP conversion, upload permissions and origin validation, invalid/large
+image rejection, binary database storage, duplicate-content reuse, public image
+delivery, cache headers/304 responses, saved homepage rendering and persistence
+after stopping/restarting the application. Tests used no Blob token.
 
 After deployment, check the public page, static assets, `/admin/login`, `/privacy`
 and the pre-launch shopping redirects. After connecting MongoDB, verify a real
 signup, owner login and an admin save. Confirm uploaded images survive redeployment
-after persistent storage is configured.
+after any storage-provider changes.
 
 Hostinger setup reference:
 https://www.hostinger.com/support/how-to-deploy-a-nodejs-website-in-hostinger/

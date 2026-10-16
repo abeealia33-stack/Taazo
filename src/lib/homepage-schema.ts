@@ -81,6 +81,7 @@ export const PHOTO_POSITIONS = ["center", "top", "bottom", "left", "right"] as c
 
 export function validPhotoUrl(value: string) {
   if (!value) return true;
+  if (/^\/media\/chulimaar\/[a-f0-9]{64}\.webp$/.test(value)) return true;
   if (/^\/(?:uploads\/chulimaar|chulimaar)\/[a-zA-Z0-9_./-]+\.(?:jpe?g|png|webp|avif)$/i.test(value) && !value.includes("..")) return true;
   try { const url = new URL(value); return url.protocol === "https:" && url.hostname.endsWith(".public.blob.vercel-storage.com") && !url.username && !url.password; } catch { return false; }
 }
