@@ -31,6 +31,7 @@ async function walk(dir: string): Promise<string[]> {
     // Abort on invalid saved content; never mistake its photographs for orphans.
     const content = homepageSchema.parse(JSON.parse(homepage.value));
     for (const image of Object.values(content.images)) if (image.url) referenced.add(image.url);
+    for (const slide of content.hero.slides) referenced.add(slide.url);
   }
 
   for (const p of await db.product.findMany()) p.photos.forEach((u) => referenced.add(u));

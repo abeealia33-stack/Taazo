@@ -15,6 +15,7 @@ export async function saveHomepage(raw: string, revision: string) {
     const issue = parsed.error.issues[0];
     let label = TEXT_FIELDS.find((field) => field.key === issue?.path[1])?.label || "Content";
     if (issue?.path[0] === "images") label = `${PHOTO_FIELDS.find((field) => field.key === issue.path[1])?.label || "Photograph"}: ${issue.path[2] === "alt" ? "image description" : "details"}`;
+    if (issue?.path[0] === "hero") label = typeof issue.path[2] === "number" ? `Hero slide ${issue.path[2] + 1}${issue.path[3] === "alt" ? " description" : ""}` : "Hero slideshow";
     if (issue?.path[0] === "faqs") label = `FAQ ${typeof issue.path[1] === "number" ? issue.path[1] + 1 : "list"}${issue.path[2] === "answer" ? " answer" : " question"}`;
     if (issue?.path[0] === "contact") label = issue.path[1] === "instagram" ? "Instagram profile" : issue.path[1] === "whatsapp" ? "WhatsApp number" : "Contact email";
     return { ok: false, message: `${label}: ${issue?.message || "Please check this value."}` };

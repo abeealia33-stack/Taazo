@@ -2,6 +2,7 @@
 import { MediaPanel } from "@/components/prelaunch/MediaPanel";
 import { LaunchForm } from "@/components/prelaunch/LaunchForm";
 import { BrandDivider } from "@/components/prelaunch/Logo";
+import { HeroBanner } from "@/components/prelaunch/HeroBanner";
 import { PHOTO_FIELDS, type HomepageContent, type PhotoKey } from "@/lib/homepage-schema";
 
 export const metadata = { alternates: { canonical: "/" } };
@@ -12,23 +13,14 @@ function Photo({ image, slot, kind, priority = false }: { image: HomepageContent
 }
 
 export default async function HomePage() {
-  const { text: t, images, faqs } = await getHomepageContent();
+  const { text: t, images, faqs, hero } = await getHomepageContent();
   const steps = [
     { number: "01", title: t.kernelsTitle, body: t.kernelsBody, image: images.kernels, slot: "kernels" },
     { number: "02", title: t.pressingTitle, body: t.pressingBody, image: images.pressing, slot: "pressing" },
     { number: "03", title: t.bottleTitle, body: t.bottleBody, image: images.bottle, slot: "bottle" },
   ] as const;
   return <>
-    <section className="cm-container cm-hero" aria-labelledby="hero-title">
-      <div className="cm-hero-copy">
-        <p className="cm-eyebrow cm-status"><span aria-hidden="true" />{t.heroEyebrow}</p>
-        <h1 id="hero-title">{t.heroTitle}<br /><em>{t.heroTitleEm}</em></h1>
-        <p className="cm-lead">{t.heroLead}</p>
-        <p className="cm-body">{t.heroBody}</p>
-        <div className="cm-actions"><a className="cm-button" href="#launch-updates">{t.launchCta}<span aria-hidden="true">↓</span></a><a className="cm-text-link" href="#our-story">{t.founderCta}<span aria-hidden="true">↓</span></a></div>
-      </div>
-      <Photo image={images.hero} slot="hero" kind="hero" priority />
-    </section>
+    <HeroBanner key={JSON.stringify(hero)} hero={hero} text={t} />
     <div className="cm-place-strip"><div className="cm-container"><span>{t.stripOne}</span><span>{t.stripTwo}</span><span>{t.stripThree}</span></div></div>
     <BrandDivider />
     <section className="cm-container cm-section cm-oil" id="our-oil" aria-labelledby="oil-title">

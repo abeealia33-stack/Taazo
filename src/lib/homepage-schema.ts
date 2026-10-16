@@ -90,22 +90,47 @@ const photoSchema = z.object({
   alt: z.string().trim().max(300), caption: z.string().trim().max(160), position: z.enum(PHOTO_POSITIONS),
 }).refine((photo) => !photo.url || photo.alt.length > 0, { message: "Describe this image for visitors using screen readers.", path: ["alt"] });
 
-export const homepageSchema = z.object({
+export const MAX_HERO_SLIDES = 6;
+const heroSlideSchema = z.object({
+  id: z.string().regex(/^[a-zA-Z0-9_-]{1,80}$/, "Invalid slide ID."),
+  url: z.string().min(1, "Upload an image for this slide.").max(1000).refine(validPhotoUrl, "Use an uploaded Chulimaar image."),
+  alt: z.string().trim().min(1, "Describe this image for visitors using screen readers.").max(300),
+  position: z.enum(PHOTO_POSITIONS), mobilePosition: z.enum(PHOTO_POSITIONS), enabled: z.boolean(),
+});
+const heroSchema = z.object({
+  slides: z.array(heroSlideSchema).max(MAX_HERO_SLIDES), autoplay: z.boolean(), interval: z.number().int().min(4).max(10),
+}).superRefine((hero, context) => {
+  if (new Set(hero.slides.map(slide => slide.id)).size !== hero.slides.length) context.addIssue({ code: "custom", message: "Each slide must have a unique ID.", path: ["slides"] });
+  if (hero.slides.length && !hero.slides.some(slide => slide.enabled)) context.addIssue({ code: "custom", message: "Enable at least one slide, or remove all slides to use the branded background.", path: ["slides"] });
+});
+export type HeroSlideshow = z.infer<typeof heroSchema>;
+export type HeroSlide = HeroSlideshow["slides"][number];
+
+// Old saved pages keep their image, text and revision. Migration is read-only
+// until the owner explicitly saves the editor.
+export const homepageSchema = z.preprocess((input) => {
+  if (!input || typeof input !== "object" || "hero" in input) return input;
+  const legacy = input as { images?: { hero?: { url?: string; alt?: string; position?: string } } };
+  const image = legacy.images?.hero;
+  return { ...input, hero: { autoplay: true, interval: 6, slides: image?.url ? [{ id: "legacy-hero", url: image.url, alt: image.alt, position: image.position, mobilePosition: image.position, enabled: true }] : [] } };
+}, z.object({
   version: z.literal(1),
   text: z.object(Object.fromEntries(TEXT_FIELDS.map((field) => [field.key, z.string().trim().min(1, "This text is required.").max("long" in field ? 2000 : 180)])) as Record<TextKey, z.ZodString>),
   images: z.object(Object.fromEntries(PHOTO_FIELDS.map((field) => [field.key, photoSchema])) as Record<PhotoKey, typeof photoSchema>),
+  hero: heroSchema,
   faqs: z.array(z.object({ question: z.string().trim().min(1, "Enter a question.").max(200), answer: z.string().trim().min(1, "Enter an answer.").max(2000) })).min(1).max(20),
   contact: z.object({
     email: z.union([z.literal(""), z.string().trim().email()]),
     instagram: z.union([z.literal(""), z.string().url().refine((value) => { try { const url = new URL(value); return url.protocol === "https:" && ["instagram.com", "www.instagram.com"].includes(url.hostname) && !url.username && !url.password; } catch { return false; } }, "Use an https://instagram.com/ profile link.")]),
     whatsapp: z.string().regex(/^\d{7,15}$|^$/, "Use 7–15 digits in international format, without + or spaces."),
   }),
-});
+}));
 export type HomepageContent = z.infer<typeof homepageSchema>;
 
 export function defaultHomepageContent(): HomepageContent {
   return {
     version: 1,
+    hero: { slides: [], autoplay: true, interval: 6 },
     text: Object.fromEntries(TEXT_FIELDS.map((field) => [field.key, field.value])) as HomepageText,
     images: Object.fromEntries(PHOTO_FIELDS.map((field) => [field.key, { url: "", alt: field.alt, caption: field.caption, position: "center" }])) as HomepageContent["images"],
     faqs: [

@@ -3,9 +3,10 @@
 import { useEffect, useRef, useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
 import { ArrowDown, ArrowUp, Check, Circle, Info, Plus, Save, Trash2 } from "lucide-react";
-import { CONTENT_SECTIONS, PHOTO_FIELDS, TEXT_FIELDS, type HomepageContent, type PhotoKey, type TextKey } from "@/lib/homepage-schema";
+import { CONTENT_SECTIONS, MAX_HERO_SLIDES, PHOTO_FIELDS, TEXT_FIELDS, type HomepageContent, type PhotoKey, type TextKey } from "@/lib/homepage-schema";
 import { saveHomepage } from "./actions";
 import { PhotoUploadCard } from "./PhotoUploadCard";
+import { HeroSlideshowCard, type HeroUploadResult } from "./HeroSlideshowCard";
 
 const TABS = ["Photos", "Page content", "FAQs"] as const;
 const PAGE_SECTIONS = CONTENT_SECTIONS.filter(section => section !== "FAQs");
@@ -93,6 +94,32 @@ export function WebsiteEditor({ initialContent, initialRevision, uploadsAvailabl
     } catch (error) { setStatus({ ok: false, message: error instanceof Error ? error.message : "The photo could not be uploaded." }); }
     finally { setUploading(null); }
   }
+  async function uploadHero(files: File[], replaceId?: string, progress?: (message: string) => void): Promise<HeroUploadResult[]> {
+    if (!uploadsAvailable || blocked) return [];
+    setUploading("hero"); setStatus(null);
+    const results: HeroUploadResult[] = [];
+    let remaining = replaceId ? 1 : MAX_HERO_SLIDES - content.hero.slides.length;
+    try {
+      for (const [index, file] of files.entries()) {
+        progress?.(`Uploading ${index + 1} of ${files.length}: ${file.name}`);
+        try {
+          if (remaining <= 0) throw new Error(`You can add up to ${MAX_HERO_SLIDES} slides. Remove a slide to make room.`);
+          if (file.size > 8 * 1024 * 1024) throw new Error("Choose an image smaller than 8MB.");
+          if (!["image/jpeg", "image/png", "image/webp", "image/avif"].includes(file.type)) throw new Error("Choose a JPG, PNG, WebP or AVIF image.");
+          const body = new FormData(); body.set("photo", file);
+          const response = await fetch("/api/admin/homepage-upload", { method: "POST", body });
+          const result = await response.json();
+          if (!response.ok || !result.url) throw new Error(result.error || "Upload failed. Please try again.");
+          const id = crypto.randomUUID();
+          setContent(previous => ({ ...previous, hero: { ...previous.hero, slides: replaceId ? previous.hero.slides.map(slide => slide.id === replaceId ? { ...slide, url: result.url } : slide) : [...previous.hero.slides, { id, url: result.url, alt: "", position: "center", mobilePosition: "center", enabled: true }] } }));
+          changed(); remaining--;
+          results.push({ name: file.name, ok: true, message: replaceId ? "Image replaced in your draft." : "Uploaded. Add an image description before saving." });
+        } catch (error) { results.push({ name: file.name, ok: false, message: error instanceof Error ? error.message : "Upload failed. Please try again." }); }
+      }
+      setStatus({ ok: results.every(result => result.ok), message: `${results.filter(result => result.ok).length} of ${files.length} images uploaded. Review slide descriptions, then save changes to publish.` });
+      return results;
+    } finally { setUploading(null); }
+  }
   function editFaq(index: number, key: "question" | "answer", value: string) { setContent(previous => ({ ...previous, faqs: previous.faqs.map((faq, i) => i === index ? { ...faq, [key]: value } : faq) })); changed(); }
   function moveFaq(index: number, delta: number) { setContent(previous => { const faqs = [...previous.faqs]; [faqs[index], faqs[index + delta]] = [faqs[index + delta], faqs[index]]; return { ...previous, faqs }; }); changed(); }
 
@@ -107,9 +134,9 @@ export function WebsiteEditor({ initialContent, initialRevision, uploadsAvailabl
     {status && <p role={status.ok ? "status" : "alert"} className={`admin-notice mb-5 ${status.ok ? "admin-notice-success" : "admin-notice-error"}`}>{status.message}</p>}
     <div role="tablist" aria-label="Website sections" className="admin-tabs">{TABS.map((name, index) => <button key={name} id={`editor-tab-${index}`} ref={node => { tabButtons.current[index] = node; }} type="button" role="tab" aria-selected={name === tab} aria-controls={`editor-panel-${index}`} tabIndex={name === tab ? 0 : -1} onClick={() => setTab(name)} onKeyDown={event => { let next = index; if (event.key === "ArrowRight") next = (index + 1) % TABS.length; else if (event.key === "ArrowLeft") next = (index + TABS.length - 1) % TABS.length; else if (event.key === "Home") next = 0; else if (event.key === "End") next = TABS.length - 1; else return; event.preventDefault(); setTab(TABS[next]); tabButtons.current[next]?.focus(); }}>{name}</button>)}</div>
     <div id="editor-panel-0" role="tabpanel" aria-labelledby="editor-tab-0" hidden={tab !== "Photos"}>
-      <div className="admin-section-heading"><div><h2>Homepage photographs</h2><p className="admin-description">Choose a space to manage its photograph.</p></div><span className="admin-status">{PHOTO_FIELDS.filter(photo => content.images[photo.key].url).length} of {PHOTO_FIELDS.length} added</span></div>
+      <div className="admin-section-heading"><div><h2>Homepage photographs</h2><p className="admin-description">Manage your hero slideshow and page photographs.</p></div><span className="admin-status">{PHOTO_FIELDS.filter(photo => photo.key === "hero" ? content.hero.slides.some(slide => slide.enabled) : content.images[photo.key].url).length} of {PHOTO_FIELDS.length} added</span></div>
       {!uploadsAvailable && <p className="admin-notice mb-5"><Info size={17} aria-hidden="true" />Photo uploads are being set up. You can still edit captions and descriptions. Empty spaces show labelled placeholders on your website.</p>}
-      <div className="admin-photo-grid">{PHOTO_FIELDS.map(photo => <PhotoUploadCard key={photo.key} photo={photo} image={content.images[photo.key]} uploading={uploading} disabled={pending} uploadsAvailable={uploadsAvailable} notice={status} onOpen={() => setStatus(null)} onEdit={editPhoto} onUpload={upload} />)}</div>
+      <div className="admin-photo-grid"><HeroSlideshowCard hero={content.hero} text={content.text} locked={blocked} busy={uploading === "hero"} uploadsAvailable={uploadsAvailable} onChange={hero => { setContent(previous => ({ ...previous, hero })); changed(); }} onUpload={uploadHero} />{PHOTO_FIELDS.filter(photo => photo.key !== "hero").map(photo => <PhotoUploadCard key={photo.key} photo={photo} image={content.images[photo.key]} uploading={uploading} disabled={pending} uploadsAvailable={uploadsAvailable} notice={status} onOpen={() => setStatus(null)} onEdit={editPhoto} onUpload={upload} />)}</div>
       {uploadsAvailable && <p className="admin-muted mt-5">Empty spaces show labelled placeholders on your live website. Upload a photograph, then save changes to publish it.</p>}
     </div>
     <div id="editor-panel-1" role="tabpanel" aria-labelledby="editor-tab-1" hidden={tab !== "Page content"}>

@@ -76,6 +76,14 @@ need Vercel Blob before relying on them across deployments. Do not use a build's
 
 ## Verification
 
+The homepage hero now supports up to six ordered slides, independently adjustable
+desktop/mobile crops, and autoplay settings. Manage these at Website → Photos →
+Hero slideshow → Manage slides. Multiple uploads prepare a draft; Save changes
+publishes it. Existing single-photo content upgrades to the first slide on read,
+without a database reset or schema migration. The original homepage content key
+and optimistic save protection are retained. Local upload cleanup also considers
+all hero slides, including hidden slides, as referenced files.
+
 The Atlas-backed homepage photo implementation was checked in production mode
 against a disposable local replica set on 16 October 2026. Verified real image
 decoding/WebP conversion, upload permissions and origin validation, invalid/large

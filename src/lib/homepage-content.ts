@@ -10,6 +10,7 @@ export function homepageDefaults() {
   const content = defaultHomepageContent();
   for (const { key } of PHOTO_FIELDS) content.images[key].url = CHULIMAAR.photos[key] || "";
   content.images.hero.alt = CHULIMAAR.heroPhotoAlt;
+  if (content.images.hero.url) content.hero.slides = [{ ...content.images.hero, id: "legacy-hero", mobilePosition: content.images.hero.position, enabled: true }];
   content.contact = { email: CHULIMAAR.email || "", instagram: CHULIMAAR.instagram || "", whatsapp: CHULIMAAR.whatsapp || "" };
   return content;
 }
