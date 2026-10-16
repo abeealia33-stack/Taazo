@@ -56,6 +56,9 @@ Uploaded photographs also need persistent storage before using the admin image
 editor. The existing adapter supports Vercel Blob through `BLOB_READ_WRITE_TOKEN`.
 Uploads written into a deployment's `public/uploads` directory are not a durable
 store across redeployments. Keep credentials in Hostinger's environment settings.
+The production homepage editor and its upload endpoint keep uploads disabled
+until the persistent storage token is configured; existing image descriptions,
+captions, crop controls and public placeholders remain available.
 
 ## Verification
 

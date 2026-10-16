@@ -7,5 +7,5 @@ export const dynamic = "force-dynamic";
 export default async function WebsitePage() {
   await requireOwner();
   const { content, revision } = await getHomepageEditor();
-  return <><AdminHeading title="Website" subtitle="Edit your homepage words and photographs. Save changes to publish them." action={{ href: "/", label: "View website ↗" }} /><WebsiteEditor initialContent={content} initialRevision={revision} /></>;
+  return <><AdminHeading title="Website" subtitle="Manage the words and photographs on your homepage." /><WebsiteEditor initialContent={content} initialRevision={revision} uploadsAvailable={process.env.NODE_ENV !== "production" || Boolean(process.env.BLOB_READ_WRITE_TOKEN?.trim())} /></>;
 }

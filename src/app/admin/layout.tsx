@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { getSession } from "@/lib/auth";
 import { AdminNav } from "@/components/admin/AdminNav";
+import "./admin.css";
 
 export const metadata: Metadata = {
   title: { default: "Chulimaar Admin", template: "%s · Chulimaar admin" },
@@ -10,9 +11,8 @@ export const metadata: Metadata = {
 /**
  * The admin shell.
  *
- * Deliberately plain: no smooth scrolling, no GSAP, no grain, no cart. The
- * storefront is designed to impress; this is designed to be fast on a phone at
- * 6am with one hand free.
+ * A compact workspace with persistent desktop navigation and a phone layout.
+ * Public-site animations and shopping controls stay in the storefront layout.
  *
  * The login page renders without the nav — it is the one admin route reachable
  * while signed out.
@@ -25,10 +25,10 @@ export default async function AdminLayout({
   const session = await getSession();
 
   return (
-    <div className="min-h-screen bg-sand-50">
+    <div className={`admin-workspace${session ? "" : " admin-signed-out"}`}>
       {session && <AdminNav session={session} />}
-      <main className={session ? "mx-auto max-w-6xl px-4 pb-24 pt-6 md:px-6" : ""}>
-        {children}
+      <main id="admin-main" className={session ? "admin-main" : ""}>
+        <div className={session ? "admin-content" : ""}>{children}</div>
       </main>
     </div>
   );

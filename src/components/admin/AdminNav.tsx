@@ -2,90 +2,55 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { ArrowUpRight, Boxes, CircleUserRound, ClipboardList, CreditCard, LayoutDashboard, LogOut, Package, PanelsTopLeft, Settings2, Tags, Truck, Users, Video, ChartNoAxesCombined, FileText } from "lucide-react";
 import { Brand } from "@/components/prelaunch/Brand";
 import { PRELAUNCH } from "@/lib/chulimaar";
 import { logout } from "@/app/admin/login/actions";
-import { cn } from "@/lib/utils";
 import type { AdminSession } from "@/lib/auth";
 
 const LINKS = [
-  { href: "/admin/launch", label: "Launch signups", ownerOnly: true },
-  { href: "/admin/website", label: "Website", ownerOnly: true },
-  { href: "/admin", label: "Today", exact: true },
-  { href: "/admin/orders", label: "Orders" },
-  { href: "/admin/batches", label: "Batches" },
-  { href: "/admin/delivery", label: "Delivery" },
-  { href: "/admin/products", label: "Products" },
-  { href: "/admin/categories", label: "Categories", ownerOnly: true },
-  { href: "/admin/content", label: "Content", ownerOnly: true },
-  { href: "/admin/reels", label: "Reels" },
-  { href: "/admin/payments", label: "Payments" },
-  { href: "/admin/reports", label: "Reports", ownerOnly: true },
-  { href: "/admin/settings", label: "Settings", ownerOnly: true },
-  { href: "/admin/account", label: "Account" },
+  { href: "/admin/website", label: "Website", icon: PanelsTopLeft, ownerOnly: true },
+  { href: "/admin/launch", label: "Launch signups", icon: Users, ownerOnly: true },
+  { href: "/admin", label: "Today", icon: LayoutDashboard, exact: true },
+  { href: "/admin/orders", label: "Orders", icon: ClipboardList },
+  { href: "/admin/batches", label: "Batches", icon: Boxes },
+  { href: "/admin/delivery", label: "Delivery", icon: Truck },
+  { href: "/admin/products", label: "Products", icon: Package },
+  { href: "/admin/categories", label: "Categories", icon: Tags, ownerOnly: true },
+  { href: "/admin/content", label: "Content", icon: FileText, ownerOnly: true },
+  { href: "/admin/reels", label: "Reels", icon: Video },
+  { href: "/admin/payments", label: "Payments", icon: CreditCard },
+  { href: "/admin/reports", label: "Reports", icon: ChartNoAxesCombined, ownerOnly: true },
+  { href: "/admin/settings", label: "Settings", icon: Settings2, ownerOnly: true },
+  { href: "/admin/account", label: "Account", icon: CircleUserRound },
 ];
 
 export function AdminNav({ session }: { session: AdminSession }) {
   const pathname = usePathname();
-  const links = LINKS.filter(
-    (l) => (!l.ownerOnly || session.role === "owner") && (!PRELAUNCH || ["/admin/launch", "/admin/website", "/admin/account"].includes(l.href)),
-  );
+  const links = LINKS.filter(link => (!link.ownerOnly || session.role === "owner") &&
+    (!PRELAUNCH || ["/admin/launch", "/admin/website", "/admin/account"].includes(link.href)));
+  const current = links.find(link => link.exact ? pathname === link.href : pathname.startsWith(link.href));
+  const initials = session.name.trim().split(/\s+/).slice(0, 2).map(part => part[0]).join("").toUpperCase();
 
-  return (
-    <header className="sticky top-0 z-40 border-b border-sand-300 bg-cream">
-      <div className="mx-auto flex max-w-6xl items-center justify-between gap-4 px-4 py-3 md:px-6">
-        <Link href="/admin" className="flex items-center gap-3 text-terracotta">
-          <Brand />
-          <span className="text-2xs uppercase tracking-[0.16em] text-sand-500">
-            admin
-          </span>
-        </Link>
-
-        <div className="flex items-center gap-3">
-          <span className="hidden text-xs text-sand-600 sm:inline">
-            {session.name}
-          </span>
-          <form action={logout}>
-            <button
-              type="submit"
-              className="rounded-full px-3 py-1.5 text-xs text-sand-600 transition-colors hover:bg-sand-200 hover:text-charcoal"
-            >
-              sign out
-            </button>
-          </form>
-        </div>
+  return <>
+    <a className="admin-skip" href="#admin-main">Skip to content</a>
+    <aside className="admin-sidebar" aria-label="Admin workspace">
+      <div className="admin-brand-row">
+        <Link href="/admin" aria-label="Chulimaar admin" className="admin-brand"><Brand /></Link>
+        <span className="admin-workspace-label">Admin workspace</span>
+        <form action={logout} className="admin-mobile-signout"><button className="admin-icon-button" aria-label="Sign out" type="submit"><LogOut size={18} aria-hidden="true" /></button></form>
       </div>
-
-      {/* Horizontally scrollable on a phone — never a hamburger for a tool
-          you use fifty times a week. */}
-      <nav
-        aria-label="Admin sections"
-        className="mx-auto max-w-6xl overflow-x-auto px-4 md:px-6"
-      >
-        <ul className="flex min-w-max gap-1 pb-2">
-          {links.map((link) => {
-            const active = link.exact
-              ? pathname === link.href
-              : pathname.startsWith(link.href);
-            return (
-              <li key={link.href}>
-                <Link
-                  href={link.href}
-                  aria-current={active ? "page" : undefined}
-                  className={cn(
-                    "block rounded-full px-4 py-2 text-sm transition-colors",
-                    active
-                      ? "bg-charcoal text-cream"
-                      : "text-sand-700 hover:bg-sand-200",
-                  )}
-                >
-                  {link.label}
-                </Link>
-              </li>
-            );
-          })}
-        </ul>
+      <nav aria-label="Admin sections" className="admin-navigation">
+        {links.map(({ href, label, icon: Icon, exact }) => {
+          const active = exact ? pathname === href : pathname.startsWith(href);
+          return <Link key={href} href={href} aria-current={active ? "page" : undefined}><Icon size={18} strokeWidth={1.7} aria-hidden="true" /><span>{label}</span></Link>;
+        })}
       </nav>
-    </header>
-  );
+      <div className="admin-sidebar-bottom">
+        <div className="admin-identity"><span className="admin-avatar" aria-hidden="true">{initials}</span><div><p>{session.name}</p><span>{session.role === "owner" ? "Owner account" : "Staff account"}</span></div></div>
+        <form action={logout}><button type="submit" className="admin-signout"><LogOut size={16} aria-hidden="true" />Sign out</button></form>
+      </div>
+    </aside>
+    <header className="admin-topbar"><p><span>Workspace</span><span aria-hidden="true">/</span><strong>{current?.label || "Admin"}</strong></p><Link href="/" target="_blank" rel="noopener noreferrer" className="admin-view-site">View website<ArrowUpRight size={16} aria-hidden="true" /><span className="sr-only"> (opens in a new tab)</span></Link></header>
+  </>;
 }

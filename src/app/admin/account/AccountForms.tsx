@@ -1,149 +1,43 @@
 "use client";
 
-import { useActionState } from "react";
+import { useActionState, useState } from "react";
+import { ChevronDown, KeyRound, UserPlus } from "lucide-react";
 import { changePassword, createStaff, type AccountState } from "./actions";
-import { Card } from "@/components/admin/ui";
 
 const initial: AccountState = {};
-const field =
-  "rounded-md border border-sand-300 bg-cream px-3 py-2 text-sm focus:border-terracotta focus:outline-none";
-
 function Notice({ state }: { state: AccountState }) {
-  if (state.error) {
-    return (
-      <p
-        role="alert"
-        className="rounded-lg border border-terracotta/40 bg-terracotta/8 px-4 py-3 text-sm text-terracotta-deep"
-      >
-        {state.error}
-      </p>
-    );
-  }
-  if (state.ok) {
-    return (
-      <p
-        role="status"
-        className="rounded-lg border border-olive/40 bg-olive/8 px-4 py-3 text-sm text-olive"
-      >
-        {state.ok}
-      </p>
-    );
-  }
-  return null;
+  return state.error ? <p role="alert" className="admin-notice admin-notice-error">{state.error}</p> : state.ok ? <p role="status" className="admin-notice admin-notice-success">{state.ok}</p> : null;
 }
 
 export function ChangePasswordForm() {
   const [state, action, pending] = useActionState(changePassword, initial);
-
-  return (
-    <Card>
-      <h2 className="text-lg tracking-tight text-charcoal">Your password</h2>
-      <p className="mt-1 text-sm text-sand-600">
-        The seeded password is written in plaintext in{" "}
-        <code className="text-charcoal">prisma/seed.ts</code>, so anyone who can
-        read this project knows it. Change it.
-      </p>
-
-      <form action={action} className="mt-5 flex max-w-sm flex-col gap-3">
-        <Notice state={state} />
-        <label className="flex flex-col gap-1.5">
-          <span className="text-xs text-sand-600">Current password</span>
-          <input
-            type="password"
-            name="current"
-            autoComplete="current-password"
-            required
-            className={field}
-          />
-        </label>
-        <label className="flex flex-col gap-1.5">
-          <span className="text-xs text-sand-600">New password</span>
-          <input
-            type="password"
-            name="next"
-            autoComplete="new-password"
-            required
-            minLength={10}
-            className={field}
-          />
-        </label>
-        <label className="flex flex-col gap-1.5">
-          <span className="text-xs text-sand-600">Repeat new password</span>
-          <input
-            type="password"
-            name="confirm"
-            autoComplete="new-password"
-            required
-            minLength={10}
-            className={field}
-          />
-        </label>
-        <button
-          disabled={pending}
-          className="mt-1 w-fit rounded-full bg-charcoal px-5 py-2.5 text-sm text-cream transition-colors hover:bg-sand-800 disabled:opacity-50"
-        >
-          {pending ? "changing…" : "change password"}
-        </button>
-      </form>
-    </Card>
-  );
+  const [open, setOpen] = useState(false);
+  return <section className="admin-panel">
+    <h2>Password</h2><p className="admin-description">Keep your account secure with a password you use only here.</p>
+    <button type="button" className="admin-button admin-button-secondary mt-5" aria-expanded={open} aria-controls="change-password-fields" onClick={() => setOpen(!open)} disabled={pending}><KeyRound size={16} aria-hidden="true" />Change password<ChevronDown size={15} aria-hidden="true" /></button>
+    <div id="change-password-fields" hidden={!open}><form action={action} className="admin-account-form">
+      <Notice state={state} />
+      <label className="admin-field">Current password<input type="password" name="current" autoComplete="current-password" required disabled={pending} className="admin-input" /></label>
+      <label className="admin-field">New password<input type="password" name="next" autoComplete="new-password" required minLength={10} disabled={pending} className="admin-input" /><span className="admin-muted">Use at least 10 characters.</span></label>
+      <label className="admin-field">Repeat new password<input type="password" name="confirm" autoComplete="new-password" required minLength={10} disabled={pending} className="admin-input" /></label>
+      <button disabled={pending} className="admin-button">{pending ? "Changing password…" : "Update password"}</button>
+    </form></div>
+  </section>;
 }
 
 export function AddStaffForm() {
   const [state, action, pending] = useActionState(createStaff, initial);
-
-  return (
-    <Card className="border-terracotta/25 bg-terracotta/[0.04]">
-      <h2 className="text-lg tracking-tight text-charcoal">Add someone</h2>
-      <p className="mt-1 text-sm text-sand-600">
-        Staff can run orders, batches and deliveries. They cannot see revenue,
-        change prices, or touch settings.
-      </p>
-
-      <form action={action} className="mt-5 grid gap-3 sm:grid-cols-2">
-        <div className="sm:col-span-2">
-          <Notice state={state} />
-        </div>
-        <label className="flex flex-col gap-1.5">
-          <span className="text-xs text-sand-600">Name</span>
-          <input name="name" required placeholder="Bilal" className={field} />
-        </label>
-        <label className="flex flex-col gap-1.5">
-          <span className="text-xs text-sand-600">Email</span>
-          <input
-            type="email"
-            name="email"
-            required
-            placeholder="bilal@taazo.pk"
-            className={field}
-          />
-        </label>
-        <label className="flex flex-col gap-1.5">
-          <span className="text-xs text-sand-600">Temporary password</span>
-          <input
-            name="password"
-            required
-            minLength={10}
-            placeholder="at least 10 characters"
-            className={field}
-          />
-        </label>
-        <label className="flex flex-col gap-1.5">
-          <span className="text-xs text-sand-600">Role</span>
-          <select name="role" defaultValue="staff" className={field}>
-            <option value="staff">Staff — orders and deliveries</option>
-            <option value="owner">Owner — everything</option>
-          </select>
-        </label>
-        <div className="sm:col-span-2">
-          <button
-            disabled={pending}
-            className="rounded-full bg-terracotta px-6 py-3 text-sm text-cream transition-colors hover:bg-terracotta-deep disabled:opacity-50"
-          >
-            {pending ? "adding…" : "add person"}
-          </button>
-        </div>
-      </form>
-    </Card>
-  );
+  const [open, setOpen] = useState(false);
+  return <div className="mt-5 border-t border-sand-200 pt-5">
+    <button type="button" className="admin-button admin-button-secondary" aria-expanded={open} aria-controls="add-member-fields" onClick={() => setOpen(!open)} disabled={pending}><UserPlus size={16} aria-hidden="true" />Add team member</button>
+    <div id="add-member-fields" hidden={!open}><form action={action} className="admin-account-form">
+      <p className="admin-muted">Staff can use operational order and delivery tools. Only owners can edit the website, view signups or manage team access.</p>
+      <Notice state={state} />
+      <label className="admin-field">Full name<input name="name" required autoComplete="name" placeholder="Full name" disabled={pending} className="admin-input" /></label>
+      <label className="admin-field">Email address<input type="email" name="email" required autoComplete="email" placeholder="name@example.com" disabled={pending} className="admin-input" /></label>
+      <label className="admin-field">Temporary password<input type="password" name="password" autoComplete="new-password" required minLength={10} disabled={pending} className="admin-input" /><span className="admin-muted">At least 10 characters. Share it privately with this person.</span></label>
+      <label className="admin-field">Access level<select name="role" defaultValue="staff" disabled={pending} className="admin-input"><option value="staff">Staff — limited access</option><option value="owner">Owner — full access</option></select></label>
+      <button disabled={pending} className="admin-button">{pending ? "Adding team member…" : "Create account"}</button>
+    </form></div>
+  </div>;
 }

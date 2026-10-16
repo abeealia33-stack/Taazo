@@ -11,15 +11,15 @@ export function AdminHeading({
   action?: { href: string; label: string };
 }) {
   return (
-    <div className="flex flex-wrap items-end justify-between gap-4 pb-6">
+    <div className="admin-page-heading flex flex-wrap items-end justify-between gap-4 pb-6">
       <div>
-        <h1 className="text-2xl tracking-tight text-charcoal">{title}</h1>
+        <h1 className="admin-page-title text-2xl tracking-tight text-charcoal">{title}</h1>
         {subtitle && <p className="mt-1 text-sm text-sand-600">{subtitle}</p>}
       </div>
       {action && (
         <Link
           href={action.href}
-          className="rounded-full bg-charcoal px-4 py-2 text-sm text-cream transition-colors hover:bg-sand-800"
+          className="admin-button admin-button-secondary"
         >
           {action.label}
         </Link>
@@ -38,7 +38,7 @@ export function Card({
   return (
     <div
       className={cn(
-        "rounded-xl border border-sand-200 bg-cream p-5 shadow-xs",
+        "admin-card rounded-xl border border-sand-200 bg-cream p-5 shadow-xs",
         className,
       )}
     >

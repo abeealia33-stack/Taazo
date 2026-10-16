@@ -7,7 +7,11 @@ export const runtime = "nodejs";
 export async function POST(request: NextRequest) {
   const session = await getSession();
   if (!session || session.role !== "owner") return NextResponse.json({ error: "Owner access is required." }, { status: 403 });
-  if (request.headers.get("origin") !== request.nextUrl.origin) return NextResponse.json({ error: "Please upload from the website editor." }, { status: 403 });
+  // Use the configured public origin behind a reverse proxy; the internal
+  // Next.js request URL may be localhost even for a same-site browser upload.
+  const origin = process.env.CHULIMAAR_SITE_URL ? new URL(process.env.CHULIMAAR_SITE_URL).origin : request.nextUrl.origin;
+  if (request.headers.get("origin") !== origin) return NextResponse.json({ error: "Please upload from the website editor." }, { status: 403 });
+  if (process.env.NODE_ENV === "production" && !process.env.BLOB_READ_WRITE_TOKEN?.trim()) return NextResponse.json({ error: "Photo uploads are being set up. Please try again once storage is ready." }, { status: 503 });
   if (Number(request.headers.get("content-length") || 0) > 9 * 1024 * 1024) return NextResponse.json({ error: "Choose a photo smaller than 8MB." }, { status: 413 });
   try {
     const form = await request.formData();
