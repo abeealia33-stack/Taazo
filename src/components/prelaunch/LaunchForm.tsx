@@ -1,10 +1,11 @@
 "use client";
 
 import Link from "next/link";
-import { useActionState, useState } from "react";
+import { useActionState, useEffect, useState } from "react";
 import { joinLaunchList } from "@/app/(site)/launch-actions";
 import type { SignupState } from "@/lib/launch-signup";
 import type { HomepageText } from "@/lib/homepage-schema";
+import { trackLaunchLead } from "@/lib/meta-pixel";
 
 const initialState: SignupState = { ok: false };
 
@@ -12,8 +13,9 @@ export function LaunchForm({ text }: { text: Pick<HomepageText, "submitLabel" | 
   const [state, action, pending] = useActionState(joinLaunchList, initialState);
   // Controlled fields survive React's form reset when a server action returns an error.
   const [values, setValues] = useState({ email: "", firstName: "", city: "" });
+  useEffect(() => { trackLaunchLead(state); }, [state]);
   return <div className="cm-launch-form">
-    {state.ok ? <div className="cm-success" role="status" aria-live="polite"><p className="cm-eyebrow">A place at the beginning</p><h3>{text.successTitle}</h3><p>{text.successBody}</p>{state.removalToken && <p className="cm-consent">Keep your <Link href={`/launch-preferences?token=${state.removalToken}`}>private removal link</Link> if you want to delete this signup later.</p>}</div> : (
+    {state.ok ? <div className="cm-success" role="status" aria-live="polite"><p className="cm-eyebrow">A place at the beginning</p><h3>{text.successTitle}</h3><p>{text.successBody}</p>{state.removalToken && <p className="cm-consent">Keep your <a href={`/launch-preferences?token=${state.removalToken}`}>private removal link</a> if you want to delete this signup later.</p>}</div> : (
       <form action={action}>
         <label htmlFor="launch-email">Email address</label>
         <input id="launch-email" type="email" name="email" required maxLength={254} autoComplete="email" placeholder="you@example.com" value={values.email} onChange={(event) => setValues({ ...values, email: event.target.value })} aria-invalid={Boolean(state.errors?.email)} aria-describedby={state.errors?.email ? "email-error" : undefined} />

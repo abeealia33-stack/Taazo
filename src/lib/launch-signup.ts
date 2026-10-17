@@ -3,7 +3,7 @@ import { z } from "zod";
 import { db } from "./db";
 
 export const NOTICE_VERSION = "2026-10-14-v1";
-export type SignupState = { ok: boolean; message?: string; removalToken?: string; errors?: Record<string, string>; values?: { email: string; firstName: string; city: string } };
+export type SignupState = { ok: boolean; message?: string; removalToken?: string; conversionEventId?: string; errors?: Record<string, string>; values?: { email: string; firstName: string; city: string } };
 export const SignupSchema = z.object({
   email: z.string().trim().toLowerCase().max(254).email("Please enter a valid email address."),
   firstName: z.string().trim().max(80, "Please keep your name under 80 characters."),
@@ -48,7 +48,7 @@ export async function saveLaunchSignup(input: z.infer<typeof SignupSchema>, trus
       // A unique index makes simultaneous and repeated signup requests idempotent.
       if (!(typeof error === "object" && error !== null && "code" in error && error.code === "P2002")) throw error;
     }
-    return { ok: true, message: "You're on the list. We'll email you when our first batch is ready and orders open.", ...(created ? { removalToken } : {}) };
+    return { ok: true, message: "You're on the list. We'll email you when our first batch is ready and orders open.", ...(created ? { removalToken, conversionEventId: randomBytes(16).toString("hex") } : {}) };
   } catch {
     // Avoid logging contact data, connection strings or database query payloads.
     return { ok: false, message: "We couldn't save your signup. Please try again." };

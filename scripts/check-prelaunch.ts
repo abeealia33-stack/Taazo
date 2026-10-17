@@ -21,6 +21,8 @@ async function main() {
     const saved = await saveLaunchSignup(input);
     assert.equal(saved.ok, true, saved.message);
     assert.match(saved.removalToken || "", /^[a-f0-9]{64}$/);
+    assert.match(saved.conversionEventId || "", /^[a-f0-9]{32}$/);
+    assert.notEqual(saved.conversionEventId, saved.removalToken, "Advertising IDs must not expose private removal credentials.");
     const row = await db.launchSubscriber.findUniqueOrThrow({ where: { email: "early@example.invalid" } });
     assert.equal(row.firstName, "Founder");
     assert.equal(row.city, "Skardu");
@@ -28,9 +30,11 @@ async function main() {
     const duplicate = await saveLaunchSignup(input);
     assert.equal(duplicate.ok, true);
     assert.equal(duplicate.removalToken, undefined, "Repeat signups must not expose an existing removal token.");
+    assert.equal(duplicate.conversionEventId, undefined, "Repeat signups must not count as new advertising leads.");
     assert.equal(await db.launchSubscriber.count(), 1);
     const racers = await Promise.all([saveLaunchSignup({ ...input, email: "race@example.invalid" }), saveLaunchSignup({ ...input, email: "race@example.invalid" })]);
     assert(racers.every((result) => result.ok));
+    assert.equal(racers.filter(result => result.conversionEventId).length, 1, "Concurrent duplicate requests must produce only one lead.");
     assert.equal(await db.launchSubscriber.count({ where: { email: "race@example.invalid" } }), 1);
     assert.equal((await saveLaunchSignup({ email: "optional@example.invalid", firstName: "", city: "", website: "" })).ok, true);
     const optional = await db.launchSubscriber.findUniqueOrThrow({ where: { email: "optional@example.invalid" } });
