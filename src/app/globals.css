@@ -1,5 +1,6 @@
 @import "tailwindcss";
 @import "./hero-banner.css";
+@import "./product-showcase.css";
 
 /* Chulimaar public identity is scoped so the existing admin remains stable. */
 .cm-site { --cm-ivory: #f7f2e7; --cm-plate: #fdfcf6; --cm-sand: #ede2cf; --cm-apricot-pale: #f3dfc9; --cm-brown: #542912; --cm-orange: #dc803f; --cm-olive: #737745; --cm-muted: #715d50; --cm-line: #d8cbb7; --cm-serif: Georgia, 'Times New Roman', serif; background: var(--cm-ivory); color: var(--cm-brown); }

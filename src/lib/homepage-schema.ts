@@ -1,4 +1,6 @@
 import { z } from "zod";
+import { DEFAULT_PRODUCT_IMAGE } from "./product-views";
+export { DEFAULT_PRODUCT_IMAGE } from "./product-views";
 
 export const HOMEPAGE_KEY = "chulimaar.homepage.v1";
 export const CONTENT_SECTIONS = ["Header", "Hero", "Product", "Process", "Founder", "Launch signup", "FAQs", "Footer"] as const;
@@ -71,7 +73,7 @@ export function homepageLinks(text: HomepageText) {
 export const PHOTO_FIELDS = [
   { key: "hero", section: "Hero", label: "Hero banner", alt: "Apricots and kernels for Chulimaar", caption: "Apricots, close to home", size: "1800 × 1800px · square", ratio: "1 / 1", guidance: "Real apricots, kernels or a Skardu orchard in natural daylight. Shown beside the main headline." },
   { key: "founder", section: "Founder", label: "Founder portrait", alt: "The founder of Chulimaar in Skardu", caption: "The founder", size: "1200 × 1500px · portrait", ratio: "4 / 5", guidance: "You in Skardu, ideally working with apricots or kernels. Shown beside your personal story." },
-  { key: "oil", section: "Product", label: "Product photograph", alt: "Chulimaar apricot kernel oil and its packaging", caption: "Our first product", size: "1600 × 1200px · landscape", ratio: "4 / 3", guidance: "Your actual oil bottle beside kernels, once the bottle and label are confirmed." },
+  { key: "oil", section: "Product", label: "Product photograph", alt: "Chulimaar apricot kernel oil bottle with a wooden cap and cream label", caption: "Our first product", size: "1024 × 1536px · portrait", ratio: "2 / 3", guidance: "Show the whole bottle, including its cap and base. The product display fits your photograph without cropping it." },
   { key: "kernels", section: "Process", label: "Kernel photograph", alt: "Apricot kernels being prepared", caption: "The kernels", size: "1600 × 1200px · landscape", ratio: "4 / 3", guidance: "A close-up of real apricot kernels. Shown above the first process step." },
   { key: "pressing", section: "Process", label: "Pressing photograph", alt: "Oil pressing equipment in Skardu", caption: "The pressing", size: "1600 × 1200px · landscape", ratio: "4 / 3", guidance: "Your pressing equipment or the pressing work in progress. Shown above the second process step." },
   { key: "bottle", section: "Process", label: "Bottling photograph", alt: "The bottling process", caption: "The finished bottle", size: "1600 × 1200px · landscape", ratio: "4 / 3", guidance: "Your actual bottling setup or finished batch, once ready. Shown above the third process step." },
@@ -109,15 +111,26 @@ export type HeroSlide = HeroSlideshow["slides"][number];
 // Old saved pages keep their image, text and revision. Migration is read-only
 // until the owner explicitly saves the editor.
 export const homepageSchema = z.preprocess((input) => {
-  if (!input || typeof input !== "object" || "hero" in input) return input;
-  const legacy = input as { images?: { hero?: { url?: string; alt?: string; position?: string } } };
+  if (!input || typeof input !== "object") return input;
+  const legacy = input as { images?: { hero?: { url?: string; alt?: string; position?: string }; oil?: Record<string, unknown> } };
   const image = legacy.images?.hero;
-  return { ...input, hero: { autoplay: true, interval: 6, slides: image?.url ? [{ id: "legacy-hero", url: image.url, alt: image.alt, position: image.position, mobilePosition: image.position, enabled: true }] : [] } };
+  const result: Record<string, unknown> = { ...input };
+  // Upgrade our bundled photograph only; owner uploads stay untouched.
+  if (legacy.images?.oil?.url === "/chulimaar/product/apricot-kernel-oil.png") result.images = { ...legacy.images, oil: { ...legacy.images.oil, url: DEFAULT_PRODUCT_IMAGE } };
+  if (!("hero" in input)) result.hero = { autoplay: true, interval: 6, slides: image?.url ? [{ id: "legacy-hero", url: image.url, alt: image.alt, position: image.position, mobilePosition: image.position, enabled: true }] : [] };
+  if (!("product" in input)) {
+    result.product = { animation: true };
+    // Adopt the supplied bottle only for an old empty product slot. Once the
+    // owner saves the new settings, an intentional image removal stays empty.
+    if (legacy.images?.oil?.url === "") result.images = { ...legacy.images, oil: { ...legacy.images.oil, url: DEFAULT_PRODUCT_IMAGE, alt: PHOTO_FIELDS.find(field => field.key === "oil")!.alt } };
+  }
+  return result;
 }, z.object({
   version: z.literal(1),
   text: z.object(Object.fromEntries(TEXT_FIELDS.map((field) => [field.key, z.string().trim().min(1, "This text is required.").max("long" in field ? 2000 : 180)])) as Record<TextKey, z.ZodString>),
   images: z.object(Object.fromEntries(PHOTO_FIELDS.map((field) => [field.key, photoSchema])) as Record<PhotoKey, typeof photoSchema>),
   hero: heroSchema,
+  product: z.object({ animation: z.boolean() }),
   faqs: z.array(z.object({ question: z.string().trim().min(1, "Enter a question.").max(200), answer: z.string().trim().min(1, "Enter an answer.").max(2000) })).min(1).max(20),
   contact: z.object({
     email: z.union([z.literal(""), z.string().trim().email()]),
@@ -131,8 +144,9 @@ export function defaultHomepageContent(): HomepageContent {
   return {
     version: 1,
     hero: { slides: [], autoplay: true, interval: 6 },
+    product: { animation: true },
     text: Object.fromEntries(TEXT_FIELDS.map((field) => [field.key, field.value])) as HomepageText,
-    images: Object.fromEntries(PHOTO_FIELDS.map((field) => [field.key, { url: "", alt: field.alt, caption: field.caption, position: "center" }])) as HomepageContent["images"],
+    images: Object.fromEntries(PHOTO_FIELDS.map((field) => [field.key, { url: field.key === "oil" ? DEFAULT_PRODUCT_IMAGE : "", alt: field.alt, caption: field.caption, position: "center" }])) as HomepageContent["images"],
     faqs: [
       { question: "What does Chulimaar mean?", answer: "Chulimaar is the Balti name we use for apricot oil. It connects this business to our language and roots in Skardu." },
       { question: "Where will the oil be pressed?", answer: "We plan to press the oil ourselves in Skardu, where our founder is from and is preparing the first batch." },
