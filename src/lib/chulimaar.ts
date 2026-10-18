@@ -1,7 +1,7 @@
 /** Confirmed pre-launch copy. Fill optional assets and channels when approved. */
 export const CHULIMAAR = {
   name: "Chulimaar",
-  siteUrl: process.env.CHULIMAAR_SITE_URL || "http://localhost:3000",
+  siteUrl: new URL(process.env.CHULIMAAR_SITE_URL || "https://deepskyblue-dove-264491.hostingersite.com").origin,
   email: process.env.CHULIMAAR_CONTACT_EMAIL || null,
   instagram: process.env.CHULIMAAR_INSTAGRAM_URL || null,
   whatsapp: process.env.CHULIMAAR_WHATSAPP || null,

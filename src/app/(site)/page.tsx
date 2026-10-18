@@ -6,6 +6,9 @@ import { HeroBanner } from "@/components/prelaunch/HeroBanner";
 import { ProductShowcase } from "@/components/prelaunch/ProductShowcase";
 import { ScrollReveal } from "@/components/prelaunch/ScrollReveal";
 import { PHOTO_FIELDS, type HomepageContent, type PhotoKey } from "@/lib/homepage-schema";
+import { OilGuides } from "@/components/prelaunch/OilGuides";
+import { StructuredData } from "@/components/prelaunch/StructuredData";
+import { HOME_TITLE, HOME_DESCRIPTION, pageSchema } from "@/lib/seo";
 
 export const metadata = { alternates: { canonical: "/" } };
 
@@ -22,6 +25,7 @@ export default async function HomePage() {
     { number: "03", title: t.bottleTitle, body: t.bottleBody, image: images.bottle, slot: "bottle" },
   ] as const;
   return <>
+    <StructuredData data={pageSchema("/", HOME_TITLE, HOME_DESCRIPTION)} />
     <HeroBanner key={JSON.stringify(hero)} hero={hero} text={t} />
     <div className="cm-place-strip"><div className="cm-container"><span>{t.stripOne}</span><span>{t.stripTwo}</span><span>{t.stripThree}</span></div></div>
     <BrandDivider />
@@ -31,5 +35,6 @@ export default async function HomePage() {
     <section className="cm-container cm-section cm-story" id="our-story" aria-labelledby="story-title"><div className="cm-section-copy"><p className="cm-eyebrow">{t.founderEyebrow}</p><h2 id="story-title">{t.founderTitle}<br /><em>{t.founderTitleEm}</em></h2></div><div className="cm-founder-copy"><p className="cm-founder-quote">{t.founderQuote}</p><p className="cm-body">{t.founderBody}</p><p className="cm-founder-signature">{t.founderName}<span>{t.founderLocation}</span></p></div><Photo image={images.founder} slot="founder" kind="portrait" /></section>
     <section className="cm-launch" id="launch-updates" aria-labelledby="launch-title"><div className="cm-container cm-launch-inner"><div><p className="cm-eyebrow">{t.launchEyebrow}</p><h2 id="launch-title">{t.launchTitle}<br /><em>{t.launchTitleEm}</em></h2><p className="cm-body">{t.launchBody}</p></div><LaunchForm text={{ submitLabel: t.submitLabel, successTitle: t.successTitle, successBody: t.successBody }} /></div></section>
     <section className="cm-container cm-section cm-faq" id="faqs" aria-labelledby="faq-title"><div><p className="cm-eyebrow">{t.faqEyebrow}</p><h2 id="faq-title">{t.faqTitle} <em>{t.faqTitleEm}</em></h2><p className="cm-body">{t.faqBody}</p></div><div className="cm-faq-list">{faqs.map((faq, index) => <details key={`${index}-${faq.question}`}><summary>{faq.question}<span aria-hidden="true">+</span></summary><p>{faq.answer}</p></details>)}</div></section>
+    <div className="cm-container cm-section"><OilGuides /></div>
   </>;
 }

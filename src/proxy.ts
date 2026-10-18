@@ -17,7 +17,7 @@ export default function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
   if (PRELAUNCH && !pathname.startsWith("/admin")) {
-    const sections: Record<string, string> = { "/story": "our-story", "/faq": "faqs", "/contact": "contact", "/reels": "our-process" };
+    const sections: Record<string, string> = { "/contact": "contact", "/reels": "our-process" };
     const url = request.nextUrl.clone();
     url.pathname = "/";
     url.search = "";
@@ -39,5 +39,5 @@ export default function proxy(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ["/admin/:path*", "/shop/:path*", "/gifting/:path*", "/cart/:path*", "/checkout/:path*", "/corporate/:path*", "/story", "/faq", "/contact", "/reels", "/terms", "/refunds", "/style"],
+  matcher: ["/admin/:path*", "/shop/:path*", "/gifting/:path*", "/cart/:path*", "/checkout/:path*", "/corporate/:path*", "/track", "/contact", "/reels", "/terms", "/refunds", "/style"],
 };

@@ -68,7 +68,7 @@ export const TEXT_FIELDS = [
 export type TextKey = typeof TEXT_FIELDS[number]["key"];
 export type HomepageText = Record<TextKey, string>;
 export function homepageLinks(text: HomepageText) {
-  return [{ label: text.navOil, href: "/#our-oil" }, { label: text.navProcess, href: "/#our-process" }, { label: text.navStory, href: "/#our-story" }, { label: text.navFaq, href: "/#faqs" }];
+  return [{ label: text.navOil, href: "/apricot-kernel-oil" }, { label: text.navProcess, href: "/our-process" }, { label: text.navStory, href: "/story" }, { label: text.navFaq, href: "/faq" }];
 }
 export const PHOTO_FIELDS = [
   { key: "hero", section: "Hero", label: "Hero banner", alt: "Apricots and kernels for Chulimaar", caption: "Apricots, close to home", size: "1800 × 1800px · square", ratio: "1 / 1", guidance: "Real apricots, kernels or a Skardu orchard in natural daylight. Shown beside the main headline." },

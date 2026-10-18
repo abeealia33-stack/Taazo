@@ -9,6 +9,8 @@ import { whatsappLink } from "@/lib/site";
 export const metadata: Metadata = {
   title: "Track your order",
   description: "Look up a taazo order with your order number.",
+  robots: { index: false, follow: false },
+  referrer: "no-referrer",
 };
 
 export const dynamic = "force-dynamic";

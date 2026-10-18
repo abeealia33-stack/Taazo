@@ -1,80 +1,18 @@
-import type { Metadata } from "next";
-import { PageHeader } from "@/components/layout/PageHeader";
-import { ProductImage } from "@/components/product/ProductImage";
-import { Reveal } from "@/components/motion/Reveal";
-import { ButtonLink } from "@/components/ui/Button";
-import { getStoryChapters } from "@/lib/content";
+import Link from "next/link";
+import { InfoPage } from "@/components/prelaunch/InfoPage";
+import { getHomepageContent } from "@/lib/homepage-content";
+import { pageMetadata } from "@/lib/seo";
 
-export const metadata: Metadata = {
-  title: "Our story",
-  description:
-    "Where taazo's fruit comes from, how it is pressed, and why the menu changes with the season.",
-};
-
-export const revalidate = 60;
-
+const title = "Our story: Chulimaar's beginning in Skardu";
+const description = "Meet Chulimaar, a founder-run apricot kernel oil brand rooted in Skardu and the Balti language. Follow our first batch from preparation to launch.";
+export const metadata = pageMetadata(title, description, "/story");
 export default async function StoryPage() {
-  const chapters = await getStoryChapters();
-
-  return (
-    <>
-      <PageHeader
-        eyebrow="our story"
-        title="Fruit, pressed the same morning you drink it"
-        intro="taazo started because fresh juice in Pakistan had come to mean a carton with a long shelf life. We wanted the short one."
-      />
-
-      {chapters.length > 0 && (
-        <div className="container-taazo flex flex-col gap-24 pb-24 md:gap-32">
-          {chapters.map((chapter, i) => (
-            <Reveal
-              key={chapter.id}
-              className={`grid items-center gap-12 lg:grid-cols-2 lg:gap-20 ${
-                i % 2 === 1 ? "lg:[&>*:first-child]:order-last" : ""
-              }`}
-            >
-              <div>
-                <p className="text-2xs uppercase tracking-[0.2em] text-sand-500">
-                  {chapter.eyebrow}
-                </p>
-                <h2 className="display-tight mt-4 text-3xl text-charcoal md:text-4xl">
-                  {chapter.title}
-                </h2>
-                {chapter.body.map((para) => (
-                  <p
-                    key={para.slice(0, 24)}
-                    className="mt-5 max-w-lg text-base leading-relaxed text-sand-800"
-                  >
-                    {para}
-                  </p>
-                ))}
-              </div>
-              <ProductImage
-                photo={chapter.photo}
-                name={chapter.title}
-                accent={chapter.accent}
-                ratio="wide"
-                sizes="(max-width: 1024px) 100vw, 46vw"
-                className="rounded-2xl shadow-md"
-              />
-            </Reveal>
-          ))}
-        </div>
-      )}
-
-      <section className="bg-olive py-24">
-        <div className="container-narrow text-center">
-          <h2 className="display-tight text-3xl text-cream md:text-4xl">
-            Today&rsquo;s batch is already pressed
-          </h2>
-          <p className="mx-auto mt-5 max-w-md text-lg text-cream/70">
-            It will not be here tomorrow. That is the whole point.
-          </p>
-          <ButtonLink href="/shop" size="lg" className="mt-9">
-            see what&rsquo;s fresh
-          </ButtonLink>
-        </div>
-      </section>
-    </>
-  );
+  const { text } = await getHomepageContent();
+  return <InfoPage path="/story" title={title} description={description} eyebrow="A name from our language. A business from our roots."
+    answer={<p>Chulimaar is the Balti name we use for apricot oil. Our founder is from Skardu and is preparing to press our first batch personally, beginning with one product intended for cooking.</p>}
+    sections={[
+      { id: "our-name", title: "What does Chulimaar mean?", content: <><p>{text.founderQuote}</p><p>The name connects our oil to our language and home. It is the starting point for a small, founder-run business with a focus on one product.</p></> },
+      { id: "our-founder", title: "The person behind the first batch", content: <><p>{text.founderBody}</p><p>{text.founderName} · {text.founderLocation}</p><p>We will share the work as it happens, including our sourcing, pressing and bottling details once confirmed. Read about <Link href="/our-process">our planned process</Link>.</p></> },
+      { id: "our-product", title: "One oil, a personal beginning", content: <><p>Our first product is apricot kernel oil being developed for cooking. We are still preparing the first batch. Ordering, pricing and delivery arrangements will be announced before launch.</p><p>Explore <Link href="/apricot-kernel-oil">our oil and launch details</Link>, or join the launch list to follow our beginning.</p></> },
+    ]} />;
 }

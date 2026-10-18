@@ -1,6 +1,7 @@
 "use client";
 
 import { useId, useRef } from "react";
+import { LaunchLink } from "./LaunchLink";
 import { ArrowDown, ChevronDown, CookingPot, MapPin, Clock3 } from "lucide-react";
 import type { HomepageContent, HomepageText } from "@/lib/homepage-schema";
 import { ProductStage } from "./ProductStage";
@@ -23,7 +24,7 @@ export function ProductShowcase({ image, text: t, animation, preview = false }: 
     <div className="cm-product-copy" data-reveal-item=""><p className="cm-body">{t.oilBody}</p><p className="cm-product-explore">Explore our first product</p>
       <div className="cm-product-facts">{facts.map((fact, index) => <details key={index} name={`product-facts-${id}`}><summary><fact.icon size={19} strokeWidth={1.5} aria-hidden="true" /><span>{fact.title}</span><ChevronDown className="cm-product-chevron" size={17} aria-hidden="true" /></summary><div><p className="cm-product-fact-label">{fact.label}</p><p>{fact.value}</p></div></details>)}</div>
       <p className="cm-small-note">{t.oilNote}</p>
-      {preview ? <span className="cm-button cm-product-launch">{t.launchCta}<ArrowDown size={16} aria-hidden="true" /></span> : <a className="cm-button cm-product-launch" href="#launch-updates">{t.launchCta}<ArrowDown size={16} aria-hidden="true" /></a>}
+      {preview ? <span className="cm-button cm-product-launch">{t.launchCta}<ArrowDown size={16} aria-hidden="true" /></span> : <LaunchLink className="cm-button cm-product-launch">{t.launchCta}<ArrowDown size={16} aria-hidden="true" /></LaunchLink>}
     </div>
   </section>;
 }
