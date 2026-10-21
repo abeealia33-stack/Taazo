@@ -3,6 +3,7 @@ import { createHash } from "node:crypto";
 import { PrismaClient } from "@/generated/prisma";
 import { db } from "@/lib/db";
 import { CHULIMAAR } from "@/lib/chulimaar";
+import { upgradeHomepageCopy } from "./homepage-copy";
 import { defaultHomepageContent, homepageSchema, HOMEPAGE_KEY, PHOTO_FIELDS, type HomepageContent } from "./homepage-schema";
 
 export function contentRevision(value: string | null) { return createHash("sha256").update(value ?? "unpublished").digest("hex"); }
@@ -12,7 +13,7 @@ export function homepageDefaults() {
   content.images.hero.alt = CHULIMAAR.heroPhotoAlt;
   if (content.images.hero.url) content.hero.slides = [{ ...content.images.hero, id: "legacy-hero", mobilePosition: content.images.hero.position, enabled: true }];
   content.contact = { email: CHULIMAAR.email || "", instagram: CHULIMAAR.instagram || "", whatsapp: CHULIMAAR.whatsapp || "" };
-  return content;
+  return upgradeHomepageCopy(content);
 }
 
 const cmsGlobal = globalThis as unknown as { homepageDb?: PrismaClient; homepageRead?: Promise<HomepageContent>; homepageLastGood?: HomepageContent };
@@ -33,7 +34,7 @@ function publicDb() {
 }
 export function parseHomepage(value: string | null | undefined): HomepageContent {
   if (!value) return homepageDefaults();
-  return homepageSchema.parse(JSON.parse(value));
+  return upgradeHomepageCopy(homepageSchema.parse(JSON.parse(value)));
 }
 export const getHomepageContent = cache(async (): Promise<HomepageContent> => {
   let timer: ReturnType<typeof setTimeout> | undefined;

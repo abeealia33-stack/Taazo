@@ -6,7 +6,7 @@ export function MediaPanel({ photo, alt, label, placeholderLabel, kind = "landsc
 }) {
   return (
     <figure className={`cm-media cm-media-${kind}`}>
-      {photo ? <Image src={photo} alt={alt} fill sizes="(max-width: 760px) calc(100vw - 40px), 50vw" preload={priority} unoptimized={photo.startsWith("https://")} style={{ objectPosition: position }} className="cm-photo" /> : (
+      {photo ? <Image src={photo} alt={alt} fill sizes="(max-width: 760px) calc(100vw - 40px), 50vw" preload={priority} style={{ objectPosition: position }} className="cm-photo" /> : (
         <div className="cm-media-empty">
           <svg className="cm-placeholder-icon" viewBox="0 0 48 48" width="48" height="48" fill="none" stroke="currentColor" strokeWidth="1.25" aria-hidden="true">
             <rect x="5" y="8" width="38" height="32" rx="3" />

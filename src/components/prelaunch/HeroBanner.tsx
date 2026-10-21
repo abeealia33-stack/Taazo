@@ -64,14 +64,14 @@ export function HeroBanner({ hero, text: t, preview }: { hero: HeroSlideshow; te
   return <section className={`cm-hero-banner${preview ? ` cm-hero-preview cm-hero-preview-${preview}` : ""}${slides.length && !failed.includes(active) ? " cm-hero-has-photo" : ""}`} aria-label="Chulimaar introduction" aria-roledescription={slides.length > 1 ? "carousel" : undefined} onMouseEnter={() => setHovered(true)} onMouseLeave={() => setHovered(false)} onFocusCapture={() => setFocused(true)} onBlurCapture={event => { if (!event.currentTarget.contains(event.relatedTarget)) setFocused(false); }}>
     <div className="cm-hero-background">
       {slides.map((slide, index) => (visited.includes(index) || index === next) && !failed.includes(index) ? <div key={slide.id} className={`cm-hero-slide${index === active ? " is-active" : ""}`} aria-hidden={index !== active} role="group" aria-roledescription="slide" aria-label={`${index + 1} of ${slides.length}`}>
-        <Image src={slide.url} alt={slide.alt} fill sizes={preview ? preview === "mobile" ? "360px" : "900px" : "100vw"} preload={!preview && index === 0} loading={index === 0 && !preview ? undefined : "eager"} unoptimized={slide.url.startsWith("https://")} style={imageStyle(slide)} onLoad={() => loaded(index)} onError={() => imageError(index)} />
+        <Image src={slide.url} alt={slide.alt} fill sizes={preview ? preview === "mobile" ? "360px" : "900px" : "100vw"} preload={!preview && index === 0} loading={index === 0 && !preview ? undefined : "eager"} fetchPriority={index === 0 ? "high" : "low"} style={imageStyle(slide)} onLoad={() => loaded(index)} onError={() => imageError(index)} />
       </div> : null)}
     </div>
     <div className="cm-hero-shade" />
     <div className="cm-container cm-hero-banner-inner">
       <div className="cm-hero-banner-copy">
         <p className="cm-eyebrow cm-status"><span aria-hidden="true" />{t.heroEyebrow}</p>
-        {preview ? <h3 className="cm-hero-title">{t.heroTitle}<br /><em>{t.heroTitleEm}</em></h3> : <h1 className="cm-hero-title">{t.heroTitle}<br /><em>{t.heroTitleEm}</em></h1>}
+        {preview ? <h3 className="cm-hero-title">{t.heroTitle}<br /> <em>{t.heroTitleEm}</em></h3> : <h1 className="cm-hero-title">{t.heroTitle}<br /> <em>{t.heroTitleEm}</em></h1>}
         <p className="cm-lead">{t.heroLead}</p><p className="cm-body">{t.heroBody}</p>
         <div className="cm-actions">{preview ? <><span className="cm-button">{t.launchCta}<ArrowDown size={16} /></span><span className="cm-text-link">{t.founderCta}<ArrowDown size={16} /></span></> : <><a className="cm-button" href="#launch-updates">{t.launchCta}<ArrowDown size={16} aria-hidden="true" /></a><a className="cm-text-link" href="#our-story">{t.founderCta}<ArrowDown size={16} aria-hidden="true" /></a></>}</div>
       </div>

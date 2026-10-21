@@ -9,8 +9,9 @@ import { PHOTO_FIELDS, type HomepageContent, type PhotoKey } from "@/lib/homepag
 import { OilGuides } from "@/components/prelaunch/OilGuides";
 import { StructuredData } from "@/components/prelaunch/StructuredData";
 import { HOME_TITLE, HOME_DESCRIPTION, pageSchema } from "@/lib/seo";
+import Link from "next/link";
 
-export const metadata = { alternates: { canonical: "/" } };
+export const metadata = { title: { absolute: HOME_TITLE }, description: HOME_DESCRIPTION, alternates: { canonical: "/" } };
 
 function Photo({ image, slot, kind, priority = false }: { image: HomepageContent["images"]["hero"]; slot: PhotoKey; kind?: "hero" | "portrait"; priority?: boolean }) {
   const placeholderLabel = PHOTO_FIELDS.find((photo) => photo.key === slot)!.label;
@@ -35,6 +36,6 @@ export default async function HomePage() {
     <section className="cm-container cm-section cm-story" id="our-story" aria-labelledby="story-title"><div className="cm-section-copy"><p className="cm-eyebrow">{t.founderEyebrow}</p><h2 id="story-title">{t.founderTitle}<br /><em>{t.founderTitleEm}</em></h2></div><div className="cm-founder-copy"><p className="cm-founder-quote">{t.founderQuote}</p><p className="cm-body">{t.founderBody}</p><p className="cm-founder-signature">{t.founderName}<span>{t.founderLocation}</span></p></div><Photo image={images.founder} slot="founder" kind="portrait" /></section>
     <section className="cm-launch" id="launch-updates" aria-labelledby="launch-title"><div className="cm-container cm-launch-inner"><div><p className="cm-eyebrow">{t.launchEyebrow}</p><h2 id="launch-title">{t.launchTitle}<br /><em>{t.launchTitleEm}</em></h2><p className="cm-body">{t.launchBody}</p></div><LaunchForm text={{ submitLabel: t.submitLabel, successTitle: t.successTitle, successBody: t.successBody }} /></div></section>
     <section className="cm-container cm-section cm-faq" id="faqs" aria-labelledby="faq-title"><div><p className="cm-eyebrow">{t.faqEyebrow}</p><h2 id="faq-title">{t.faqTitle} <em>{t.faqTitleEm}</em></h2><p className="cm-body">{t.faqBody}</p></div><div className="cm-faq-list">{faqs.map((faq, index) => <details key={`${index}-${faq.question}`}><summary>{faq.question}<span aria-hidden="true">+</span></summary><p>{faq.answer}</p></details>)}</div></section>
-    <div className="cm-container cm-section"><OilGuides /></div>
+    <div className="cm-container cm-section"><p className="cm-body cm-home-story-link"><Link href="/story">Meet Asad Ali and Muhammad Raza, co-founders of CHULIMAAR</Link></p><OilGuides /></div>
   </>;
 }

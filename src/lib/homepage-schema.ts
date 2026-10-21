@@ -11,22 +11,22 @@ export const TEXT_FIELDS = [
   { key: "navStory", section: "Header", label: "Story navigation label", value: "Our Story" },
   { key: "navFaq", section: "Header", label: "FAQ navigation label", value: "FAQs" },
   { key: "launchCta", section: "Header", label: "Launch button label", value: "Get Launch Updates" },
-  { key: "heroEyebrow", section: "Hero", label: "Status line", value: "Preparing our first batch" },
-  { key: "heroTitle", section: "Hero", label: "Headline — first line", value: "Rooted in Skardu." },
-  { key: "heroTitleEm", section: "Hero", label: "Headline — italic line", value: "Pressed in Skardu." },
+  { key: "heroEyebrow", section: "Hero", label: "Status line", value: "Apricot oil from Skardu" },
+  { key: "heroTitle", section: "Hero", label: "Headline — first line", value: "Apricot kernel oil." },
+  { key: "heroTitleEm", section: "Hero", label: "Headline — italic line", value: "From Skardu, Pakistan." },
   { key: "heroLead", section: "Hero", label: "Product introduction", value: "Apricot kernel oil for cooking." },
-  { key: "heroBody", section: "Hero", label: "Supporting paragraph", value: "I'm preparing to press our first batch personally in Skardu, where I'm from. One product for your kitchen, built from our roots.", long: true },
-  { key: "founderCta", section: "Hero", label: "Founder button label", value: "Meet the Founder" },
+  { key: "heroBody", section: "Hero", label: "Supporting paragraph", value: "Rooted in Skardu, CHULIMAAR begins with one oil and a focus on cooking. Founded by Asad Ali and Muhammad Raza, with a personal connection to the place behind our oil.", long: true },
+  { key: "founderCta", section: "Hero", label: "Founder button label", value: "Meet the Co-founders" },
   { key: "stripOne", section: "Hero", label: "Bottom strip — first message", value: "One product. A personal beginning." },
   { key: "stripTwo", section: "Hero", label: "Bottom strip — second message", value: "From our roots to your kitchen." },
   { key: "stripThree", section: "Hero", label: "Bottom strip — location", value: "Chulimaar · Skardu" },
   { key: "oilEyebrow", section: "Product", label: "Section label", value: "Meet our first product" },
   { key: "oilTitle", section: "Product", label: "Heading — first line", value: "Apricot kernel oil," },
   { key: "oilTitleEm", section: "Product", label: "Heading — italic line", value: "for your kitchen." },
-  { key: "oilBody", section: "Product", label: "Introduction", value: "We're beginning with one oil and a focus on cooking. We'll share the details as our preparation takes shape.", long: true },
+  { key: "oilBody", section: "Product", label: "Introduction", value: "Apricot kernel oil pressed in Skardu, Pakistan, with cooking as our primary focus. Explore our product information and follow our launch updates.", long: true },
   { key: "focusLabel", section: "Product", label: "First fact label", value: "Our focus" },
   { key: "focusValue", section: "Product", label: "First fact value", value: "Cooking" },
-  { key: "productionLabel", section: "Product", label: "Second fact label", value: "Planned production" },
+  { key: "productionLabel", section: "Product", label: "Second fact label", value: "Pressed in" },
   { key: "productionValue", section: "Product", label: "Second fact value", value: "Skardu, Pakistan" },
   { key: "availabilityLabel", section: "Product", label: "Third fact label", value: "Availability" },
   { key: "availabilityValue", section: "Product", label: "Third fact value", value: "Preparing for launch" },
@@ -38,16 +38,16 @@ export const TEXT_FIELDS = [
   { key: "kernelsTitle", section: "Process", label: "Stage 1 title", value: "The kernels" },
   { key: "kernelsBody", section: "Process", label: "Stage 1 description", value: "We're preparing our kernel sourcing and selection. We'll share their origin and preparation once confirmed.", long: true },
   { key: "pressingTitle", section: "Process", label: "Stage 2 title", value: "The pressing" },
-  { key: "pressingBody", section: "Process", label: "Stage 2 description", value: "We plan to press the oil ourselves in Skardu, documenting our equipment and extraction method as we begin.", long: true },
+  { key: "pressingBody", section: "Process", label: "Stage 2 description", value: "Our oil is pressed in Skardu, Pakistan. Detailed equipment and extraction information will be shared when confirmed.", long: true },
   { key: "bottleTitle", section: "Process", label: "Stage 3 title", value: "The finished bottle" },
   { key: "bottleBody", section: "Process", label: "Stage 3 description", value: "Our bottle and label are being finalised. We'll share how the oil is finished, bottled and identified before launch.", long: true },
-  { key: "founderEyebrow", section: "Founder", label: "Section label", value: "The person behind Chulimaar" },
+  { key: "founderEyebrow", section: "Founder", label: "Section label", value: "The people behind Chulimaar" },
   { key: "founderTitle", section: "Founder", label: "Heading — first line", value: "A name from our language." },
   { key: "founderTitleEm", section: "Founder", label: "Heading — italic line", value: "A business from our roots." },
-  { key: "founderQuote", section: "Founder", label: "Personal quote", value: "“I'm from Skardu. Chulimaar is the Balti name we use for apricot oil.”", long: true },
-  { key: "founderBody", section: "Founder", label: "Founder story", value: "I'm starting with one product and preparing to press the oil myself, building a business connected to my language and home.", long: true },
-  { key: "founderName", section: "Founder", label: "Founder name / signature", value: "The founder of Chulimaar" },
-  { key: "founderLocation", section: "Founder", label: "Location", value: "Skardu, Pakistan" },
+  { key: "founderQuote", section: "Founder", label: "Personal quote", value: "Chulimaar is the Balti name we use for apricot oil.", long: true },
+  { key: "founderBody", section: "Founder", label: "Founder story", value: "CHULIMAAR is founded by Asad Ali and Muhammad Raza. Our story begins with apricot kernel oil, a focus on the kitchen, and roots in Skardu.", long: true },
+  { key: "founderName", section: "Founder", label: "Founder name / signature", value: "Asad Ali & Muhammad Raza" },
+  { key: "founderLocation", section: "Founder", label: "Location", value: "Co-founders · Skardu, Pakistan" },
   { key: "launchEyebrow", section: "Launch signup", label: "Section label", value: "From our kitchen to yours" },
   { key: "launchTitle", section: "Launch signup", label: "Heading — first line", value: "Be first to hear about" },
   { key: "launchTitleEm", section: "Launch signup", label: "Heading — italic line", value: "our first batch." },
@@ -77,6 +77,10 @@ export const PHOTO_FIELDS = [
   { key: "kernels", section: "Process", label: "Kernel photograph", alt: "Apricot kernels being prepared", caption: "The kernels", size: "1600 × 1200px · landscape", ratio: "4 / 3", guidance: "A close-up of real apricot kernels. Shown above the first process step." },
   { key: "pressing", section: "Process", label: "Pressing photograph", alt: "Oil pressing equipment in Skardu", caption: "The pressing", size: "1600 × 1200px · landscape", ratio: "4 / 3", guidance: "Your pressing equipment or the pressing work in progress. Shown above the second process step." },
   { key: "bottle", section: "Process", label: "Bottling photograph", alt: "The bottling process", caption: "The finished bottle", size: "1600 × 1200px · landscape", ratio: "4 / 3", guidance: "Your actual bottling setup or finished batch, once ready. Shown above the third process step." },
+  { key: "kitchen", section: "Product", label: "Cooking photograph", alt: "Apricot oil being used in a kitchen", caption: "In the kitchen", size: "1600 × 1200px · landscape", ratio: "4 / 3", guidance: "Actual culinary use matching confirmed product directions. Shown on the product page. Describe exactly what the photograph shows." },
+  { key: "skin", section: "Product", label: "Skin-care guide photograph", alt: "Oil being applied to hands", caption: "Skin-care education", size: "1600 × 1200px · landscape", ratio: "4 / 3", guidance: "Oil application to hands for the educational guide. Do not imply CHULIMAAR cosmetic suitability without finished-product support. Describe the actual image." },
+  { key: "hair", section: "Product", label: "Hair-care guide photograph", alt: "Oil being applied to hair ends", caption: "Hair-care education", size: "1600 × 1200px · landscape", ratio: "4 / 3", guidance: "Application to hair ends for the educational guide. Describe the actual image; avoid hair-growth claims." },
+  { key: "skardu", section: "Founder", label: "Skardu story photograph", alt: "Skardu, Pakistan", caption: "Our roots in Skardu", size: "1600 × 1200px · landscape", ratio: "4 / 3", guidance: "Your actual Skardu photograph. Name only the place and activity visible in the image; do not use a generated image as documentary evidence." },
 ] as const;
 export type PhotoKey = typeof PHOTO_FIELDS[number]["key"];
 export const PHOTO_POSITIONS = ["center", "top", "bottom", "left", "right"] as const;
@@ -124,6 +128,8 @@ export const homepageSchema = z.preprocess((input) => {
     // owner saves the new settings, an intentional image removal stays empty.
     if (legacy.images?.oil?.url === "") result.images = { ...legacy.images, oil: { ...legacy.images.oil, url: DEFAULT_PRODUCT_IMAGE, alt: PHOTO_FIELDS.find(field => field.key === "oil")!.alt } };
   }
+  // New editorial slots are optional for previously saved pages; keep all existing media.
+  result.images = { ...defaultHomepageContent().images, ...((result.images as Record<string, unknown> | undefined) ?? legacy.images) };
   return result;
 }, z.object({
   version: z.literal(1),
@@ -149,7 +155,7 @@ export function defaultHomepageContent(): HomepageContent {
     images: Object.fromEntries(PHOTO_FIELDS.map((field) => [field.key, { url: field.key === "oil" ? DEFAULT_PRODUCT_IMAGE : "", alt: field.alt, caption: field.caption, position: "center" }])) as HomepageContent["images"],
     faqs: [
       { question: "What does Chulimaar mean?", answer: "Chulimaar is the Balti name we use for apricot oil. It connects this business to our language and roots in Skardu." },
-      { question: "Where will the oil be pressed?", answer: "We plan to press the oil ourselves in Skardu, where our founder is from and is preparing the first batch." },
+      { question: "Where is CHULIMAAR oil pressed?", answer: "CHULIMAAR oil is pressed in Skardu, Pakistan. Detailed sourcing and processing information will be shared when confirmed." },
       { question: "What culinary uses is it intended for?", answer: "Cooking is the primary purpose of our first product. We'll share specific culinary uses once the product specifications are confirmed." },
       { question: "When will orders open?", answer: "We're preparing our first batch and haven't announced an opening date yet. Sign up for launch updates to hear when the oil is ready and orders open." },
       { question: "Where will delivery be available?", answer: "Delivery areas and ordering arrangements are being finalised. We'll announce them before orders open." },

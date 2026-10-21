@@ -1,11 +1,11 @@
 import type { MetadataRoute } from "next";
 import { CHULIMAAR } from "@/lib/chulimaar";
-import { CONTENT_DATE, GUIDE_LINKS, siteUrl } from "@/lib/seo";
+import { PAGE_DATES, SEARCH_INDEXING, siteUrl } from "@/lib/seo";
 
 export default function sitemap(): MetadataRoute.Sitemap {
+  if (!SEARCH_INDEXING) return [];
   return [
-    { url: CHULIMAAR.siteUrl, changeFrequency: "weekly", priority: 1 },
-    ...[...GUIDE_LINKS.map(link => link.href), "/story", "/our-process", "/faq"].map(path => ({ url: siteUrl(path), lastModified: CONTENT_DATE, changeFrequency: "monthly" as const, priority: .7 })),
+    ...Object.entries(PAGE_DATES).map(([path, dates]) => ({ url: path === "/" ? CHULIMAAR.siteUrl : siteUrl(path), lastModified: dates.modified, changeFrequency: "monthly" as const, priority: path === "/" ? 1 : .7 })),
     { url: siteUrl("/privacy"), changeFrequency: "monthly", priority: .3 },
   ];
 }

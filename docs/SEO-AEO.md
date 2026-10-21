@@ -1,39 +1,71 @@
-# Chulimaar SEO and answer-engine content
+# CHULIMAAR SEO and answer-engine content
 
-Content release: 18 October 2026.
+Implementation updated: 22 October 2026. The existing visual system is retained.
 
-## Public pages
+## Public content
 
-- `/`: brand introduction, interactive product and launch signup, linked oil guides.
-- `/apricot-kernel-oil`: product introduction, buying intent, current availability, price and delivery status.
-- `/guides/apricot-oil-uses`: food/cosmetic distinctions and practical selection questions.
-- `/guides/apricot-oil-benefits`: composition studies, nutrition context and evidence limitations, with primary sources.
-- `/story`, `/our-process`, `/faq`: Chulimaar information; legacy Taazo pages at `/story` and `/faq` have been replaced. Other legacy commerce routes stay gated.
+- `/`: exact requested homepage title/description, a product-specific H1, equal co-founder presentation and links to substantive guides.
+- `/apricot-kernel-oil`: Apricot Kernel Oil from Skardu; product definition, location, intended culinary use, specification/storage status and ordering information.
+- `/guides/apricot-oil-skin-hair`: ingredient-level cosmetic education with separate skin and hair answers and CIR reference.
+- `/guides/apricot-kernel-oil-unsaturated-fats`: Pakistani composition research, AHA dietary context, direct low-fat clarification and evidence limitations.
+- `/story`: Our Skardu Story; Asad Ali and Muhammad Raza presented equally as co-founders, without individual roles.
+- `/our-process`, `/faq`, `/contact`, `/privacy`: supporting public pages. Contact uses only published CHULIMAAR channels, without the old Taazo/Lahore contact details.
 
-Each page has a canonical URL and unique metadata. Public layouts emit Organization and WebSite JSON-LD. Informational pages have WebPage and BreadcrumbList data; guides also have dated Article data with source citations. JSON-LD escapes `<` before insertion. No invented rating, stock, price, nutrition claim, medical author or Offer markup is emitted. FAQ content is visible HTML; no Google FAQ rich-result promise is made.
+The two former guide URLs issue one-hop 308 permanent redirects, preserving query parameters. Internal links, canonical URLs and sitemap use the new destinations.
 
-## Content maintenance
+## Facts and claims
 
-Update product availability, pricing, bottle size and delivery together when confirmed. Article publication/modification dates and sitemap modification dates are actual editorial dates, not the request time. Update the relevant dates when the content changes. Process/story/FAQ sections use approved homepage CMS copy where relevant; longer guides are maintained in source.
+Skardu pressing and the two co-founders' names are owner-supplied facts. Cooking is the primary positioning. No price, stock, exact ingredient declaration, smoke point, storage duration, certification, testimonial, rating, clinical result or cosmetic suitability is invented. Missing finished-product information is identified honestly.
 
-Do not turn chemical composition or laboratory antioxidant results into claims of disease treatment or cosmetic efficacy. Source studies do not test Chulimaar's forthcoming batch. Publish product-specific composition and cooking guidance only after it is confirmed.
+Published research describes the oils or formulations studied. The fats guide places the Pakistani composition study and AHA sources beside the relevant answers. The skin/hair guide links CIR beside its cosmetic discussion. These references do not establish a CHULIMAAR treatment effect or endorse this product.
 
-## Domain and crawling
+The owner still needs to provide approved label/specifications, finished-product usage and storage directions, actual public contact channels, additional firsthand story details and suitable photographs.
 
-`CHULIMAAR_SITE_URL` is the public origin for canonicals, schema and sitemap. Set it to the permanent HTTPS domain before moving the site, rebuild/redeploy, and arrange redirects from previous public URLs. The production fallback is the current Hostinger address; localhost is used only when explicitly configured for local QA.
+## CMS and imagery
 
-On 18 October the live temporary address returned a hosting-level robots response with `User-agent: Googlebot` / `Disallow: /`, differing from `src/app/robots.ts`. A source change alone cannot prove that this has been resolved. Check the actual response after deployment and in Google URL Inspection. The application allows public crawling, advertises the sitemap, and excludes admin/API/private preferences and prelaunch commerce routes. Robots exclusions are not access controls; admin authentication and private-page noindex are separate.
+Previous shipped homepage copy upgrades on read without writing the database. Exact matching preserves owner custom text, photographs and settings; the editor receives the upgraded content for a normal future save. New optional image slots are added safely to older saved content.
 
-## Search measurement setup
+Admin > Website > Photos now includes kitchen, skin-care, hair-care and Skardu story slots. Upload genuine relevant photographs, describe what each actually shows, review captions and save. These optional slots are omitted from public pages until supplied. Do not use generated or stock production photographs as evidence of actual CHULIMAAR operations.
 
-1. Sign in to Google Search Console and Bing Webmaster Tools using the website owner's accounts.
-2. Add the permanent domain property with DNS verification, or a URL-prefix property using the site's exact current HTTPS origin.
-3. For HTML-tag verification, set the public token value in `GOOGLE_SITE_VERIFICATION` or `BING_SITE_VERIFICATION` in Hostinger, then redeploy. Do not paste an entire meta tag into the variable. Do not put account credentials in source.
-4. Verify ownership, submit `/sitemap.xml`, and inspect the homepage and all six new information pages. Resolve blocked crawling before requesting indexing.
-5. Record indexing, search queries, impressions, clicks and organic signups weekly; review Bing AI citation reporting where available. Search/AI visibility is not guaranteed, and Meta Pixel is not an organic-search reporting tool.
+Existing responsive sizes and reserved image space remain. Approved Vercel Blob images can use Next.js optimization; offscreen hero slides have low fetch priority. The existing upload path resizes and converts photographs to WebP. Article images are included only when an appropriate guide image is provided, rather than defaulting to a generic social graphic.
 
-Changing Search Console ownership or DNS needs the owner's intended account/domain. Do not create an unrelated property or purchase a domain without their direction.
+## Metadata and structured data
 
-## Verification
+Public HTML includes distinct titles, descriptions, canonical URLs, one H1 and direct answer paragraphs. Organization/WebSite identity, page breadcrumbs, guide Articles and descriptive Product data are emitted in server HTML with safe JSON serialization.
 
-`npx tsx scripts/check-seo.ts <base-url> [canonical-origin]` performs read-only public HTTP checks, including the live robots response. It fails if Hostinger still blocks Googlebot. Use the base URL itself as the canonical origin in the normal deployed environment. Also run the production build, targeted ESLint and browser checks at narrow and desktop widths before releasing.
+Organization identity names both co-founders equally. Article authorship remains CHULIMAAR; no expert reviewer is invented. Per-page editorial dates retain existing guide publication history from 18 October and record substantive changes on 22 October. Matching modification dates appear in the sitemap and Article/Open Graph data.
+
+Product data has no invented Offer, rating or review. Descriptive Product markup alone does not meet Google's product-snippet eligibility requirements. No FAQ rich results or AI citations are promised.
+
+Current documentation reviewed:
+- [Google Product snippets](https://developers.google.com/search/docs/appearance/structured-data/product-snippet)
+- [Google Articles](https://developers.google.com/search/docs/appearance/structured-data/article)
+- [Google Organizations](https://developers.google.com/search/docs/appearance/structured-data/organization)
+- [Google Breadcrumbs](https://developers.google.com/search/docs/appearance/structured-data/breadcrumb)
+- [Google AI features](https://developers.google.com/search/docs/appearance/ai-features)
+
+## Production and staging
+
+`CHULIMAAR_SITE_URL` remains the canonical origin. The current website is the Hostinger address; the owner plans to buy a permanent domain later. Change the environment setting and rebuild/redeploy when migrating, with path-preserving permanent redirects from the previous public origin where supported.
+
+`CHULIMAAR_SEARCH_INDEXING=false` is available for a separate staging deployment: pages emit noindex/nofollow, generated sitemap entries are omitted, robots disallows crawling, and the Next.js response header configuration adds X-Robots-Tag. Set this before building the staging deployment. Authentication remains necessary for truly private content.
+
+Production defaults to public indexing. Utility-page noindex directives remain, and robots allows crawlers to retrieve those directives. Admin authentication is separate from robots.
+
+**External blocker:** the public Hostinger robots response in the audit specifically disallowed Googlebot, despite the application allowing public crawling. Hostinger was opened during implementation and required sign-in. Local source/build checks cannot fix or verify that external override. After sign-in, inspect Hostinger/proxy/CDN/deployment configuration and retest the exact public response. No hosting change or production deployment has been made in this implementation session.
+
+## Verification and release
+
+The production build and targeted ESLint passed. The read-only HTTP suite passed against the local production server for nine public pages, metadata, answers, organization/co-founder identity, Article dates/citations, Product data, redirects, sitemap, utility-page noindex and crawl access. CMS upgrade checks verify preservation of custom copy/media, idempotence and safe addition of new photo slots. Staging sitemap/robots/header configuration passed a separate read-only check.
+
+Browser checks at desktop and 390px mobile width inspected the existing visual treatment; checked mobile pages had no horizontal overflow. Local preview uses fallback content when the CMS database is unavailable, so live uploaded photographs must also be checked after deployment. These checks are not a claim of a measured Core Web Vitals score or Google rich-result validation.
+
+Run after deployment:
+
+```text
+node --import tsx scripts/check-seo.ts <public-origin> [canonical-origin]
+```
+
+The canonical-origin argument is useful when checking a local preview whose URLs point to the production host. On production it normally equals public-origin.
+
+Run Google Rich Results Test/Schema Markup Validator and URL Inspection on the deployed release; verify crawl access before requesting indexing. Set up/use the owner's Search Console and Bing Webmaster Tools, submit the sitemap and begin a fresh performance baseline. No performance report was available, so rankings and search volumes remain unverified.

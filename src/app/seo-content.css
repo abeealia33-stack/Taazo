@@ -1,4 +1,8 @@
 .cm-info-page { padding-block: 36px 90px; }
+.cm-story-photo { max-width: 520px; margin-bottom: 48px; }
+.cm-editorial-photos { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 300px), 1fr)); gap: 24px; margin-bottom: 48px; }
+.cm-home-story-link { margin-bottom: 32px; }
+.cm-home-story-link a { text-decoration: underline; text-underline-offset: 4px; }
 .cm-breadcrumbs { display: flex; flex-wrap: wrap; align-items: baseline; gap: 10px; color: var(--cm-muted); font-size: .85rem; margin-bottom: 64px; }
 .cm-breadcrumbs a { text-decoration: underline; text-underline-offset: 4px; }
 .cm-info-header { max-width: 960px; margin-bottom: 56px; }

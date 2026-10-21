@@ -17,7 +17,7 @@ export function Footer({ content }: { content: HomepageContent }) {
           {contact.whatsapp && <a href={`https://wa.me/${contact.whatsapp}`} target="_blank" rel="noopener noreferrer">WhatsApp ↗</a>}
         </div>
       </div>
-      <nav className="cm-footer-guides" aria-label="Apricot oil guides">{GUIDE_LINKS.map(link => <Link key={link.href} href={link.href}>{link.title}</Link>)}</nav>
+      <nav className="cm-footer-guides" aria-label="Apricot oil guides">{GUIDE_LINKS.map(link => <Link key={link.href} href={link.href}>{link.title}</Link>)}<Link href="/contact">Contact CHULIMAAR</Link></nav>
       <div className="cm-footer-bottom"><p>© {new Date().getFullYear()} {text.footerCopyright}</p><Link href="/privacy">Privacy policy</Link><span>{text.footerNote}</span></div>
     </div></footer>
   );

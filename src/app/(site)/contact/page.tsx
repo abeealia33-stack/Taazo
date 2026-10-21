@@ -1,101 +1,24 @@
-import type { Metadata } from "next";
-import { PageHeader } from "@/components/layout/PageHeader";
-import { SITE, whatsappLink } from "@/lib/site";
+import Link from "next/link";
+import { InfoPage } from "@/components/prelaunch/InfoPage";
+import { LaunchLink } from "@/components/prelaunch/LaunchLink";
+import { getHomepageContent } from "@/lib/homepage-content";
+import { pageMetadata } from "@/lib/seo";
 
-export const metadata: Metadata = {
-  title: "Contact",
-  description: "Reach taazo on WhatsApp, by phone or by email.",
-};
+const title = "Contact CHULIMAAR";
+const description = "Find CHULIMAAR’s published contact channels and follow product and launch updates from our apricot kernel oil brand in Skardu, Pakistan.";
+export const metadata = pageMetadata(title, description, "/contact");
 
-/** Only channels that actually exist become links. */
-const CHANNELS = [
-  {
-    label: "WhatsApp",
-    detail: "Fastest. Someone replies during the day.",
-    href: whatsappLink("Hi taazo!"),
-    action: "start a chat",
-    external: true,
-  },
-  {
-    label: "Phone",
-    detail: SITE.phoneDisplay,
-    href: `tel:${SITE.phoneDisplay.replace(/\s/g, "")}`,
-    action: "call us",
-    external: false,
-  },
-  ...(SITE.email
-    ? [
-        {
-          label: "Email",
-          detail: SITE.email,
-          href: `mailto:${SITE.email}`,
-          action: "send an email",
-          external: false,
-        },
-      ]
-    : []),
-];
-
-export default function ContactPage() {
-  return (
-    <>
-      <PageHeader
-        eyebrow="contact"
-        title="Talk to a person"
-        intro="No ticket system, no chatbot. WhatsApp is the quickest way to reach us, and it is where most orders end up being sorted anyway."
-      />
-
-      <div className="container-narrow pb-24">
-        <ul className="divide-y divide-sand-300/70 border-y border-sand-300/70">
-          {CHANNELS.map((c) => (
-            <li key={c.label}>
-              <a
-                href={c.href}
-                target={c.external ? "_blank" : undefined}
-                rel={c.external ? "noopener noreferrer" : undefined}
-                className="group flex items-center justify-between gap-6 py-6 transition-colors"
-              >
-                <div>
-                  <p className="text-xl tracking-tight text-charcoal transition-colors group-hover:text-terracotta">
-                    {c.label}
-                  </p>
-                  <p className="mt-1 text-sm text-sand-600">{c.detail}</p>
-                </div>
-                <span className="flex shrink-0 items-center gap-2 text-sm text-sand-600 transition-colors group-hover:text-terracotta">
-                  {c.action}
-                  <span
-                    aria-hidden
-                    className="transition-transform duration-[var(--dur-fast)] ease-(--ease-out-soft) group-hover:translate-x-1"
-                  >
-                    →
-                  </span>
-                </span>
-              </a>
-            </li>
-          ))}
-        </ul>
-
-        <div className="mt-14 rounded-xl bg-sand-100 p-7 ring-1 ring-sand-200">
-          <h2 className="text-lg tracking-tight text-charcoal">
-            Where we are
-          </h2>
-          <p className="mt-3 text-base leading-relaxed text-sand-700">
-            We press in {SITE.city} every morning and deliver across the city
-            the same day. There is no shopfront to visit yet — everything goes
-            out from the kitchen.
-          </p>
-          <p className="mt-4 text-sm text-sand-600">
-            Orders and questions: {SITE.phoneDisplay}
-            {SITE.email ? ` · ${SITE.email}` : ""}
-          </p>
-
-          {!SITE.email && (
-            <p className="mt-3 text-sm text-sand-600">
-              An email address is on the way. WhatsApp reaches us today.
-            </p>
-          )}
-        </div>
-      </div>
-    </>
-  );
+export default async function ContactPage() {
+  const { contact } = await getHomepageContent();
+  const hasContact = Boolean(contact.email || contact.whatsapp || contact.instagram);
+  return <InfoPage path="/contact" title={title} description={description} eyebrow="CHULIMAAR · Keep in touch"
+    answer={<p>{hasContact ? "Use the published channels below for questions about CHULIMAAR apricot kernel oil." : "Our public contact channels have not yet been published. For now, you can follow CHULIMAAR’s product and launch updates on this website."}</p>}
+    sections={[
+      { id: "channels", title: "How can I contact CHULIMAAR?", content: hasContact ? <ul>
+        {contact.email && <li>Email: <a href={`mailto:${contact.email}`}>{contact.email}</a></li>}
+        {contact.whatsapp && <li>WhatsApp: <a href={`https://wa.me/${contact.whatsapp}`}>+{contact.whatsapp}</a></li>}
+        {contact.instagram && <li><a href={contact.instagram}>CHULIMAAR on Instagram</a></li>}
+      </ul> : <p>Public email, telephone and social contact details will appear here when available. <LaunchLink>Join the launch updates list</LaunchLink> to receive confirmed ordering information.</p> },
+      { id: "location", title: "Where is CHULIMAAR based?", content: <><p>CHULIMAAR’s roots and oil pressing are in Skardu, Pakistan. We have not published a visitor address or shop opening hours.</p><p>Meet <Link href="/story">co-founders Asad Ali and Muhammad Raza</Link>, or explore <Link href="/apricot-kernel-oil">our product information</Link>.</p></> },
+    ]} />;
 }

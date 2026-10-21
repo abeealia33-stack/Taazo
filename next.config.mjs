@@ -2,6 +2,17 @@
 const nextConfig = {
   // Isolated browser/integration QA must not overwrite the normal dev build.
   distDir: process.env.CHULIMAAR_CMS_QA === "1" ? ".tmp/cms-next" : ".next",
+  async redirects() {
+    return [
+      { source: "/guides/apricot-oil-uses", destination: "/guides/apricot-oil-skin-hair", permanent: true },
+      { source: "/guides/apricot-oil-benefits", destination: "/guides/apricot-kernel-oil-unsaturated-fats", permanent: true },
+    ];
+  },
+  async headers() {
+    return process.env.CHULIMAAR_SEARCH_INDEXING === "false"
+      ? [{ source: "/:path*", headers: [{ key: "X-Robots-Tag", value: "noindex, nofollow" }] }]
+      : [];
+  },
   experimental: {
     /**
      * Server Actions cap request bodies at 1MB by default. Media no longer
@@ -14,6 +25,7 @@ const nextConfig = {
   },
 
   images: {
+    remotePatterns: [{ protocol: "https", hostname: "**.public.blob.vercel-storage.com", pathname: "/**" }],
     /**
      * AVIF first, WebP as the fallback.
      *

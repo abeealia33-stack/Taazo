@@ -12,7 +12,11 @@ export default async function SiteLayout({ children }: { children: React.ReactNo
   const content = await getHomepageContent();
   const organization = {
     "@type": "Organization", "@id": siteUrl("/#organization"), name: "Chulimaar", url: siteUrl(),
-    description: "A founder-run apricot kernel oil brand preparing its first batch in Skardu, Pakistan.",
+    description: "An apricot kernel oil brand rooted in Skardu, Pakistan, founded by Asad Ali and Muhammad Raza, with cooking as its primary focus.",
+    founder: [
+      { "@type": "Person", name: "Asad Ali", url: siteUrl("/story") },
+      { "@type": "Person", name: "Muhammad Raza", url: siteUrl("/story") },
+    ],
     logo: { "@type": "ImageObject", url: siteUrl("/chulimaar/brand/stacked-color.png") },
     ...(content.contact.email ? { email: content.contact.email } : {}),
     ...(content.contact.instagram ? { sameAs: [content.contact.instagram] } : {}),

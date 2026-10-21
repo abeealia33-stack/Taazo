@@ -13,6 +13,10 @@ export const CHULIMAAR = {
     pressing: process.env.CHULIMAAR_PRESSING_PHOTO || null,
     bottle: process.env.CHULIMAAR_BOTTLE_PHOTO || null,
     founder: process.env.CHULIMAAR_FOUNDER_PHOTO || null,
+    kitchen: process.env.CHULIMAAR_KITCHEN_PHOTO || null,
+    skin: process.env.CHULIMAAR_SKIN_PHOTO || null,
+    hair: process.env.CHULIMAAR_HAIR_PHOTO || null,
+    skardu: process.env.CHULIMAAR_SKARDU_PHOTO || null,
   },
 } as const;
 

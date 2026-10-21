@@ -1,20 +1,21 @@
 import Link from "next/link";
 import { InfoPage } from "@/components/prelaunch/InfoPage";
+import { MediaPanel } from "@/components/prelaunch/MediaPanel";
 import { getHomepageContent } from "@/lib/homepage-content";
 import { pageMetadata } from "@/lib/seo";
-import { LaunchLink } from "@/components/prelaunch/LaunchLink";
 
-const title = "Our planned apricot oil process in Skardu";
-const description = "Follow Chulimaar’s planned kernel sourcing, pressing and bottling in Skardu. See what is confirmed and what we will share before the first batch launches.";
+const title = "Our Apricot Oil Process in Skardu";
+const description = "Explore CHULIMAAR’s apricot oil production information from Skardu, Pakistan, including what is confirmed about pressing and what we will share before launch.";
 export const metadata = pageMetadata(title, description, "/our-process");
+
 export default async function ProcessPage() {
-  const { text } = await getHomepageContent();
-  return <InfoPage path="/our-process" title={title} description={description} eyebrow="From kernel to bottle · Taking shape"
-    answer={<p>We plan to press Chulimaar’s first batch of apricot kernel oil ourselves in Skardu. Kernel sourcing, extraction details, bottling and final product information are being prepared. This page describes our plans; we will publish confirmed details as the work progresses.</p>}
+  const { images } = await getHomepageContent();
+  return <InfoPage path="/our-process" title={title} description={description} eyebrow="CHULIMAAR · From kernel to bottle"
+    answer={<p>CHULIMAAR apricot kernel oil is pressed in Skardu, Pakistan. Our product journey begins with kernels, continues through pressing and ends with bottling. Detailed sourcing, equipment and finished-product information will be shared when confirmed.</p>}
     sections={[
-      { id: "kernels", title: "Where will the kernels come from?", content: <><p>{text.kernelsBody}</p><p>Being based in Skardu is part of our story. The origin of a particular batch’s kernels will be shared when confirmed.</p></> },
-      { id: "pressing", title: "How will the oil be pressed?", content: <><p>{text.pressingBody}</p><p>We have not yet published a confirmed extraction method or processing temperature. Any future process claim will describe the equipment and method actually used.</p></> },
-      { id: "bottling", title: "What will be shared about the finished oil?", content: <><p>{text.bottleBody}</p><p>Before orders open, we will share confirmed ingredients, bottle sizes, usage and storage instructions, alongside price and delivery arrangements.</p></> },
-      { id: "follow", title: "How can I follow the first batch?", content: <p>Join <LaunchLink>Chulimaar launch updates</LaunchLink> for an email when our oil is ready. For current availability, see <Link href="/apricot-kernel-oil">our product page</Link>.</p> },
+      { id: "kernels", title: "Where do the kernels come from?", content: <><p>Batch-specific kernel sourcing and selection details have not yet been published. Pressing in Skardu does not, by itself, establish the growing origin of every kernel.</p>{images.kernels.url && <MediaPanel photo={images.kernels.url} alt={images.kernels.alt} label={images.kernels.caption} placeholderLabel="Apricot kernels" position={images.kernels.position} />}</> },
+      { id: "pressing", title: "Where and how is the oil pressed?", content: <><p>Our oil is pressed in Skardu, Pakistan. Details about the equipment, extraction method and processing temperature will be shared when confirmed.</p>{images.pressing.url && <MediaPanel photo={images.pressing.url} alt={images.pressing.alt} label={images.pressing.caption} placeholderLabel="Oil production" position={images.pressing.position} />}</> },
+      { id: "bottling", title: "What is shared about the finished bottle?", content: <><p>Final ingredients, bottle sizes, batch identification, usage and storage instructions will be published alongside the confirmed product details.</p><p>See <Link href="/apricot-kernel-oil#product-details">the current CHULIMAAR product information</Link>. Photographs illustrate the product’s presentation; the published specification will state the final details.</p>{images.bottle.url && <MediaPanel photo={images.bottle.url} alt={images.bottle.alt} label={images.bottle.caption} placeholderLabel="The bottle" position={images.bottle.position} />}</> },
+      { id: "people", title: "Who is behind CHULIMAAR?", content: <><p>Asad Ali and Muhammad Raza are the co-founders of CHULIMAAR.</p><p>Read <Link href="/story">our Skardu story</Link> to learn about the brand’s roots.</p></> },
     ]} />;
 }
